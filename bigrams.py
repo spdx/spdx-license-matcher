@@ -10,5 +10,9 @@ def generate_bigrams(text):
     Returns:
         list -- A list of bigrams formed from the normalized license text.
     """
-    nltk_tokens = nltk.word_tokenize(text)
+    try:
+        nltk_tokens = nltk.word_tokenize(text)
+    except LookupError:
+        nltk.download('punkt')
+        nltk_tokens = nltk.word_tokenize(text)
     return list(nltk.bigrams(nltk_tokens))
