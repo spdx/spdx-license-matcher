@@ -1,0 +1,7 @@
+redis
+pyfiglet
+nltk
+requests
+grequests
+beautifulsoup4
+
