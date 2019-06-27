@@ -6,7 +6,7 @@ from sorensen_dice import get_dice_coefficient
 from utils import decompressBytesToString
 
 
-def compare(text):
+def compare(inputText):
     """Normalizes the given license text and forms bigrams before comparing it
     with a database of known licenses.
 
@@ -17,18 +17,14 @@ def compare(text):
         string -- license name with the highest dice coefficient.
         float -- max dice coefficient.
     """
-    normalizedText = normalize(text)
-    print("[+] Nomalizing the license text...")
-    aBigram = generate_bigrams(normalizedText)
-    print("[+] Forming bigrams from the normalized text...")
+    normalizedInputText = normalize(inputText)
+    aBigram = generate_bigrams(normalizedInputText)
     r = redis.StrictRedis(host='localhost', port=6379, db=0)
-    print("[+] Comparing with the SPDX License List...")
     diceCoefficients = {}
     for key in r.keys('*'):
         licenseName = key.decode('utf-8')
-        licenseText = decompressBytesToString(r.get(key))
-        normalizeLicenseText = normalize(licenseText)
-        bBigram = generate_bigrams(normalizeLicenseText)
+        normalizedLicenseText = decompressBytesToString(r.get(key))
+        bBigram = generate_bigrams(normalizedLicenseText)
         diceCoefficients[licenseName] = get_dice_coefficient(aBigram, bBigram)
     license, max_dice = key_with_max_val(diceCoefficients)
     return license, max_dice

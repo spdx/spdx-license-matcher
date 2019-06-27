@@ -1,4 +1,3 @@
-import json
 from re import compile
 
 import grequests
@@ -6,8 +5,8 @@ import redis
 import requests
 from bs4 import BeautifulSoup
 
+from normalize import normalize
 from utils import compressStringToBytes
-
 
 URL = 'https://raw.github.com/spdx/license-list-data/master/json/details/'
 
@@ -27,9 +26,10 @@ def get_set_data():
     # Send them all at the same time:
     responses = grequests.map(rs)
     for response in responses:
-        licenseJson = json.loads(response.content.decode('utf-8'))
+        licenseJson = response.json()
         licenseName = licenseJson['licenseId']
         licenseText = licenseJson['licenseText']
         r = redis.StrictRedis(host='localhost', port=6379, db=0)
-        compressedText = compressStringToBytes(licenseText)
+        normalizedLicenseText = normalize(licenseText)
+        compressedText = compressStringToBytes(normalizedLicenseText)
         r.set(licenseName, compressedText)
