@@ -1,35 +1,22 @@
 import argparse
-import sys
 
-import redis
 from pyfiglet import figlet_format
 
-from compare import compare, key_with_max_val
-from get_set_data import get_set_data
+from compare import compare
 from utils import colors
 
 
 def main():
-    if not len(sys.argv):
-        print("ERROR: No file provided. Please provide a file. For more info try the --help flag.")
-        sys.exit(0)
-
-    parser = argparse.ArgumentParser(
-        description='SPDX License Match tool help.')
-    parser.add_argument(
-        "filename", help="Please provide a file with License text.")
+    parser = argparse.ArgumentParser(description='SPDX License Match tool help.')
+    parser.add_argument("filename", help="Please provide a file with License text to match against the SPDX License database.")
     args = parser.parse_args()
     filename = args.filename
-    f = open(filename, "r")
-    inputText = f.read()
-    r = redis.StrictRedis(host='localhost', port=6379, db=0)
-    if r.keys('*') == []:
-        # if data is not already set in the redis
-        get_set_data()
-    license, dice = compare(inputText)
-    print(colors('\nSTATUS', 92))
-    print('Input license text matches with that of {} with a dice coefficient of {}'.format(
-        license, dice))
+    with open(filename) as file:
+        inputText = file.read()
+    inputText = bytes(inputText, 'utf-8').decode('unicode-escape')
+    license, score = compare(inputText)
+    print(colors('STATUS', 92))
+    print('Input license text matches with that of {} with a dice coefficient of {}'.format(license, score))
 
 
 if __name__ == "__main__":

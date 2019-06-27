@@ -1,6 +1,6 @@
 import gzip
 
-from io import StringIO, BytesIO
+from io import BytesIO
 
 
 def colors(string, color):
