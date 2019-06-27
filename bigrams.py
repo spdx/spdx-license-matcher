@@ -1,6 +1,3 @@
-import nltk
-
-
 def generate_bigrams(text):
     """Tokenizes normalized license text into a list of bigrams.
 
@@ -10,9 +7,10 @@ def generate_bigrams(text):
     Returns:
         list -- A list of bigrams formed from the normalized license text.
     """
-    try:
-        nltk_tokens = nltk.word_tokenize(text)
-    except LookupError:
-        nltk.download('punkt')
-        nltk_tokens = nltk.word_tokenize(text)
-    return list(nltk.bigrams(nltk_tokens))
+    # Break the sentence into tokens as well as remove empty tokens if any
+    tokens = text.split(" ")
+
+    # Use the zip function to generate bigrams
+    # Returns a list of bigrams
+    bigrams = zip(*[tokens[i:] for i in range(2)])
+    return list(bigrams)
