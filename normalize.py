@@ -2,6 +2,13 @@ import unicodedata
 import re
 
 
+URL_REGEX = r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
+COPYRIGHT_NOTICE_REGEX = r"((?<=\n)|.*)Copyright.+(?=\n)|Copyright.+\\n"
+COPYRIGHT_SYMBOLS = r"[©Ⓒⓒ]"
+BULLETS_NUMBERING_REGEX = r"\s(([0-9a-z]\.\s)+|(\([0-9a-z]\)\s)+|(\*\s)+)|(\s\([i]+\)\s)"
+COMMENTS_REGEX = r"(\/\/|\/\*|#) +.*"
+EXTRANEOUS_REGEX = r"(?is)\s*end of terms and conditions.*"
+ADDENDIUM_EXHIBIT_REGEX = r"(?s)(APPENDIX|APADDENDUM|EXHIBIT).*"
 VARIETAL_WORDS_SPELLING = {
     'acknowledgment': 'acknowledgement',
     'analogue': 'analog',
@@ -48,146 +55,48 @@ VARIETAL_WORDS_SPELLING = {
 }
 
 
-def normalize_unicode(text):
-    """Normalize unicode normalizes license text with NFC or
-    Normal form composed and return composed character.
-
-    Arguments:
-        text {string} -- text is the license text of the license.
-
-    Returns:
-        string -- license text normalized with NFC
-    """
-    return unicodedata.normalize('NFC', text)
-
-
-def normalize_url(text):
-    """To avoid a possibility of a non-match due to urls not being same.
-
-    Arguments:
-        text {string} -- text is the license text of the license.
-
-    Returns:
-        string -- license text with all the urls replaced with a normalized url.
-    """
-    return re.sub('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', 'https://normalized/url', text)
-
-
-def to_lowercase(text):
-    """To avoid a possibility of a non-match due to upper cases or
-    lower cases of the same words, both the cases will be treated as lower case.
-
-    Arguments:
-        text {string} -- text is the license text of the license.
-
-    Returns:
-        string -- license text with all the letters default to lower case.
-    """
-    return text.lower()
-
-
-def remove_copyright_statement(text):
-    """To avoid a license mismatch merely because the copyright notice is
-    different. The copyright notice, for the purposes of matching a license
-    to the SPDX License List, should be ignored because it is not part of the 
-    substantive license text.
-
-    Arguments:
-        text {string} -- text is the license text of the license.
-
-    Returns:
-        string -- license text with copyright statement removed.
-    """
-    return re.sub("((?<=\n\n)|.*)Copyright.+(?=\n\n)|Copyright.+\\n\\n", "", text)
-
-
-def fix_copyright_symbol(text):
-    """By using a default copyright symbol (c)", we can avoid the possibility of a mismatch.
-
-    Arguments:
-        text {string} -- text is the license text of the license.
-
-    Returns:
-        string -- license text in which all possible variations of copyright symbols are replaced with (C).
-    """
-    return re.sub(r"[©Ⓒⓒ]", "(C)", text)
-
-
-def cleanup_bullets_numbering(text):
-    """To avoid the possibility of a non-match due to the otherwise same license
-    using bullets instead of numbers, number instead of letter, or no bullets
-    instead of bullet, etc., for a list of clauses.
-
-    Arguments:
-        text {string} -- text is the license text of the license.
-    Returns:
-        string -- license text with all the list items removed.
-    """
-    return re.sub("\s((\d+\.\s)+|(\([0-9a-z]+\)\s)+|(\*\s)+)", " ", text)
-
-
-def remove_license_name_or_title(text):
-    """To avoid a license mismatch merely because the name or title of the license
-    is different than how the license is usually referred to or different than the
-    SPDX full name. This also avoids a mismatch if the title or name of the license
-    is simply not included.
-
-    Arguments:
-        text {string} -- text is the license text of the license.
-
-    Returns:
-        string -- license text with license name or title removed.
-    """
-    return re.sub(".*?\\n\\n", "", text, 1)
-
-
-def replace_varietal_words(text):
-    """English uses different spelling for some words. By identifying the spelling
-    variations for words found or likely to be found in licenses, we avoid the
-    possibility of a non-match due to the same word being spelled differently.
-
-    Arguments:
-        text {string} -- text is the license text of the license.
-
-    Returns:
-        string -- license text with the varietal words replaced.
-    """
-    for initial, final in VARIETAL_WORDS_SPELLING.items():
-        text = text.replace(initial, final)
-    return text
-
-
-def whitespaces(text):
-    """To avoid the possibility of a non-match due to different spacing of
-    words, line breaks, or paragraphs.
-
-    Arguments:
-        text {string} -- text is the license text of the license.
-
-    Returns:
-        string -- license text with all the different spacing, line breaks,
-        or paragraphs replaced with a blank space.
-    """
-    text = " ".join(text.split())
-    return text
-
-
-def normalize(text):
+def normalize(licenseText):
     """Normalize the license text with all the SPDX license list matching guidelines.
 
     Arguments:
-        text {string} -- text is the license text of the license.
+        licenseText {string} -- licenseText is the license text of the license.
 
     Returns:
-        string -- license text with nomalized with all the SPDX matching guidelines.
+        string -- license text nomalized with all the SPDX matching guidelines.
     """
-    text = remove_license_name_or_title(text)
-    text = normalize_unicode(text)
-    text = normalize_url(text)
-    text = fix_copyright_symbol(text)
-    text = remove_copyright_statement(text)
-    text = to_lowercase(text)
-    text = cleanup_bullets_numbering(text)
-    text = replace_varietal_words(text)
-    text = whitespaces(text)
-    return text
+    # Normalizes license text with NFC or Normal form composed.
+    licenseText = str(unicodedata.normalize('NFC', licenseText))
+
+    # To avoid a possibility of a non-match due to urls not being same.
+    licenseText = re.sub(URL_REGEX, 'normalized/url', licenseText)
+
+    # To avoid the license mismatch merely due to the existence or absence of code comment indicators placed within the license text, they are just removed.
+    licenseText = re.sub(COMMENTS_REGEX, "", licenseText)
+
+    # To avoid a license mismatch merely because extraneous text that appears at the end of the terms of a license is different or missing.
+    licenseText = re.sub(EXTRANEOUS_REGEX, "", licenseText)
+    licenseText = re.sub(ADDENDIUM_EXHIBIT_REGEX, "", licenseText)
+
+    # By using a default copyright symbol (c)", we can avoid the possibility of a mismatch.
+    licenseText = re.sub(COPYRIGHT_SYMBOLS, "(C)", licenseText)
+
+    # To avoid a license mismatch merely because the copyright notice is different, it is not substantive and is removed.
+    licenseText = re.sub(COPYRIGHT_NOTICE_REGEX, "", licenseText)
+
+    # To avoid a possibility of a non-match due to case sensitivity.
+    licenseText = licenseText.lower()
+
+    # To remove the license name or title present at the beginning of the license text.
+    if 'license' in licenseText.split('\n')[0]:
+        licenseText = '\n'.join(licenseText.split('\n')[1:])
+
+    # To avoid the possibility of a non-match due to variations of bullets, numbers, letter, or no bullets used are simply removed.
+    licenseText = re.sub(BULLETS_NUMBERING_REGEX, " ", licenseText)
+
+    # To avoid the possibility of a non-match due to the same word being spelled differently.
+    for initial, final in VARIETAL_WORDS_SPELLING.items():
+        licenseText = licenseText.replace(initial, final)
+
+    # To avoid the possibility of a non-match due to different spacing of words, line breaks, or paragraphs.
+    licenseText = " ".join(licenseText.split())
+    return licenseText
