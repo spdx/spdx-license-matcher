@@ -6,7 +6,7 @@ from sorensen_dice import get_dice_coefficient
 from utils import decompressBytesToString
 
 
-def compare(inputText):
+def compare(inputText, limit):
     """Normalizes the given license text and forms bigrams before comparing it
     with a database of known licenses.
 
@@ -14,8 +14,7 @@ def compare(inputText):
         text {string} -- text is the license text input by the user.
 
     Returns:
-        string -- license name with the highest dice coefficient.
-        float -- max dice coefficient.
+        dictionary -- dictionary with license name as key and dice coefficient as value.
     """
     normalizedInputText = normalize(inputText)
     aBigram = generate_bigrams(normalizedInputText)
@@ -25,22 +24,10 @@ def compare(inputText):
         licenseName = key.decode('utf-8')
         normalizedLicenseText = decompressBytesToString(r.get(key))
         bBigram = generate_bigrams(normalizedLicenseText)
-        diceCoefficients[licenseName] = get_dice_coefficient(aBigram, bBigram)
-    license, max_dice = key_with_max_val(diceCoefficients)
-    return license, max_dice
+        score = get_dice_coefficient(aBigram, bBigram)
 
-
-def key_with_max_val(dictionary):
-    """Creates a list of dictionary's keys and values
-
-    Arguments:
-        dictionary {dictionary} -- dictionary with license names as keys and 
-        associated dice coefficients as values.
-
-    Returns:
-        integer -- Returns the maximum value present in the dictionary.
-        string -- Key associated with the maximum value.
-    """
-    v = list(dictionary.values())
-    k = list(dictionary.keys())
-    return k[v.index(max(v))], max(v)
+        # if score is greater then the limit or if its a perfect match then just stop the loop
+        if limit < score or score == 1.0:
+            return { licenseName:score }
+        diceCoefficients[licenseName] = score
+    return diceCoefficients

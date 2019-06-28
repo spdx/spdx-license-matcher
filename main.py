@@ -9,14 +9,30 @@ from utils import colors
 def main():
     parser = argparse.ArgumentParser(description='SPDX License Match tool help.')
     parser.add_argument("filename", help="Please provide a file with License text to match against the SPDX License database.")
+    parser.add_argument('--limit', '-l', type=float, default=0.99, help='limit')
+    parser.add_argument('--threshold', '-t', type=float, default=0.9, help='Confidence threshold of the license')
     args = parser.parse_args()
     filename = args.filename
+    limit = args.limit
+    threshold = args.threshold
     with open(filename) as file:
         inputText = file.read()
     inputText = bytes(inputText, 'utf-8').decode('unicode-escape')
-    license, score = compare(inputText)
+    result = compare(inputText, limit)
     print(colors('STATUS', 92))
-    print('Input license text matches with that of {} with a dice coefficient of {}'.format(license, score))
+
+    # When limit < score or if its a perfect match
+    if len(result) == 1:
+        (license, score) = list(result.items())[0]
+        print('Input license text matches with that of {} with a dice coefficient of {}'.format(license, score))
+
+    else:
+        close_matches = {licenseName: score for licenseName, score in result.items() if threshold<score<1.0}
+        if all(value < threshold for value in result.values()):
+            print('There is not enough confidence threshold for the text to match against the SPDX License database.')
+        if len(close_matches):
+            print('The close matches are:')
+            print(close_matches)
 
 
 if __name__ == "__main__":
