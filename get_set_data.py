@@ -33,3 +33,6 @@ def get_set_data():
         normalizedLicenseText = normalize(licenseText)
         compressedText = compressStringToBytes(normalizedLicenseText)
         r.set(licenseName, compressedText)
+
+if __name__ == "__main__":
+    get_set_data()
