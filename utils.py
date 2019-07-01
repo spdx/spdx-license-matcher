@@ -1,6 +1,8 @@
 import gzip
-
+import os
 from io import BytesIO
+
+import jpype
 
 
 def colors(string, color):
@@ -21,7 +23,7 @@ def decompressBytesToString(inputBytes):
         inputBytes {bytes} -- A valid compressed gzip byte array
 
     Returns:
-        [string] -- utf-8 decoded text
+        string -- utf-8 decoded text
     """
     buf = BytesIO()
     stream = BytesIO(inputBytes)
@@ -57,3 +59,68 @@ def compressStringToBytes(inputString):
             compressor.close()
             return stream.getvalue()
         compressor.write(chunk)
+
+
+def getListedLicense(licenseId):
+    """Get a SPDX listed license if the given SPDX license ID is present in the SPDX license list otherwise null.
+
+    Arguments:
+        licenseId {string} -- SPDX listed license ID
+
+    Returns:
+        string -- SPDX listed license or null
+    """
+    if (jpype.isJVMStarted()==0):
+
+        # If JVM not already started, start it, attach a Thread and start processing the request
+        classpath = os.path.join(os.path.abspath("."), "tool.jar")
+        jpype.startJVM(jpype.getDefaultJVMPath(), "-ea", "-Djava.class.path=%s"%classpath, convertStrings=False)
+
+        # Attach a Thread and start processing the request
+        jpype.attachThreadToJVM()
+        package = jpype.JPackage("org.spdx.rdfparser.license")
+        licenseinfofactoryclass = package.LicenseInfoFactory
+        try:
+
+            # Call the method getListedLicenseById present in the SPDX Tools
+            listed_license = licenseinfofactoryclass.getListedLicenseById(licenseId)
+            jpype.detachThreadFromJVM()
+            return listed_license
+        except jpype.java.lang.Exception as e :
+            print ("Caught the Following ERROR: ", e)
+            jpype.detachThreadFromJVM()
+
+
+def checkTextStandardLicense(license, compareText):
+    """Compares the license text to the license text of SPDX Standard License.
+
+    Arguments:
+        license {string} -- SPDX standard license.
+        compareText {string} -- Text to compare with the standard license.
+
+    Returns:
+        string -- Difference message if any differences found or None.
+    """
+
+    if (jpype.isJVMStarted()==0):
+
+        # If JVM not already started, start it, attach a Thread and start processing the request
+        classpath = os.path.join(os.path.abspath("."), "tool.jar")
+        jpype.startJVM(jpype.getDefaultJVMPath(), "-ea", "-Djava.class.path=%s"%classpath, convertStrings=False)
+
+    # Attach a Thread and start processing the request
+    jpype.attachThreadToJVM()
+    package = jpype.JPackage("org.spdx.compare")
+    compareclass = package.LicenseCompareHelper
+    jpype.detachThreadFromJVM()
+    try:
+
+        # Call the java method isTextStandardLicense present in the SPDX Tools
+        diff = compareclass.isTextStandardLicense(license, compareText)
+        if diff.isDifferenceFound():
+            return str(jpype.JString(diff.getDifferenceMessage()))
+        else:
+            return None
+    except jpype.java.lang.Exception as e:
+        print ("Caught the Following ERROR: ", e)
+        jpype.detachThreadFromJVM()

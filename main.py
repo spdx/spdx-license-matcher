@@ -3,7 +3,7 @@ import argparse
 from pyfiglet import figlet_format
 
 from compare import compare
-from utils import colors
+from utils import colors, getListedLicense, checkTextStandardLicense
 
 
 def main():
@@ -31,8 +31,12 @@ def main():
         if all(value < threshold for value in result.values()):
             print('There is not enough confidence threshold for the text to match against the SPDX License database.')
         if len(close_matches):
-            print('The close matches are:')
-            print(close_matches)
+            licenseID = max(close_matches)
+            listedLicense = getListedLicense(licenseID)
+            differences = checkTextStandardLicense(listedLicense, inputText)
+            print('\nThe given license text has the following differences:')
+            print(colors(differences, 92))
+
 
 
 if __name__ == "__main__":
