@@ -1,5 +1,4 @@
 redis
 pyfiglet
 requests
-grequests
-beautifulsoup4
+jpype1
