@@ -1,38 +1,50 @@
-from re import compile
+import sys
+from concurrent.futures import ThreadPoolExecutor
 
-import grequests
 import redis
 import requests
-from bs4 import BeautifulSoup
 
 from normalize import normalize
 from utils import compressStringToBytes
 
-URL = 'https://raw.github.com/spdx/license-list-data/master/json/details/'
+
+def get_url(url):
+    """GET URL and return response"""
+    user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36'
+    headers = {'User-Agent': user_agent }
+    res = requests.get(url, headers=headers)
+    return res
 
 
 def get_set_data():
-    """Used to get data from SPDX dataset and set data in redis.
+    """ Get data from SPDX license list and set data in redis.
     """
-    url = 'https://github.com/spdx/license-list-data/tree/master/json/details'
+    url = 'https://spdx.org/licenses/licenses.json'
+    r = redis.StrictRedis(host='localhost', port=6379, db=0)
+
+    # Delete all the keys in the current database
+    r.flushdb()
+
     response = requests.get(url)
-    soup = BeautifulSoup(response.content, 'html.parser')
-    aTags = soup.find_all('a', {"title": compile("json")})
-    licenses = []
-    for aTag in aTags:
-        licenses.append(aTag.get('title'))
-    licenses_url = [URL+license for license in licenses]
-    rs = (grequests.get(u) for u in licenses_url)
-    # Send them all at the same time:
-    responses = grequests.map(rs)
+    licensesJson = response.json()
+    licenses = licensesJson['licenses']
+    licensesUrl = [license.get('detailsUrl') for license in licenses]
+
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        responses = list(pool.map(get_url, licensesUrl))
+
     for response in responses:
-        licenseJson = response.json()
-        licenseName = licenseJson['licenseId']
-        licenseText = licenseJson['licenseText']
-        r = redis.StrictRedis(host='localhost', port=6379, db=0)
-        normalizedLicenseText = normalize(licenseText)
-        compressedText = compressStringToBytes(normalizedLicenseText)
-        r.set(licenseName, compressedText)
+        try:
+            licenseJson = response.json()
+            licenseName = licenseJson['licenseId']
+            licenseText = licenseJson['licenseText']
+            normalizeText = normalize(licenseText)
+            compressedText = compressStringToBytes(normalizeText)
+            r.set(licenseName, compressedText)
+        except Exception as e:
+            print(e)
+            sys.exit(0)
+
 
 if __name__ == "__main__":
     get_set_data()
