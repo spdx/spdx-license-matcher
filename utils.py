@@ -76,19 +76,19 @@ def getListedLicense(licenseId):
         classpath = os.path.join(os.path.abspath("."), "tool.jar")
         jpype.startJVM(jpype.getDefaultJVMPath(), "-ea", "-Djava.class.path=%s"%classpath, convertStrings=False)
 
-        # Attach a Thread and start processing the request
-        jpype.attachThreadToJVM()
-        package = jpype.JPackage("org.spdx.rdfparser.license")
-        licenseinfofactoryclass = package.LicenseInfoFactory
-        try:
+    # Attach a Thread and start processing the request
+    jpype.attachThreadToJVM()
+    package = jpype.JPackage("org.spdx.rdfparser.license")
+    licenseinfofactoryclass = package.LicenseInfoFactory
+    try:
 
-            # Call the method getListedLicenseById present in the SPDX Tools
-            listed_license = licenseinfofactoryclass.getListedLicenseById(licenseId)
-            jpype.detachThreadFromJVM()
-            return listed_license
-        except jpype.java.lang.Exception as e :
-            print ("Caught the Following ERROR: ", e)
-            jpype.detachThreadFromJVM()
+        # Call the method getListedLicenseById present in the SPDX Tools
+        listed_license = licenseinfofactoryclass.getListedLicenseById(licenseId)
+        jpype.detachThreadFromJVM()
+        return listed_license
+    except:
+        jpype.detachThreadFromJVM()
+        raise
 
 
 def checkTextStandardLicense(license, compareText):
@@ -112,15 +112,13 @@ def checkTextStandardLicense(license, compareText):
     jpype.attachThreadToJVM()
     package = jpype.JPackage("org.spdx.compare")
     compareclass = package.LicenseCompareHelper
-    jpype.detachThreadFromJVM()
     try:
 
         # Call the java method isTextStandardLicense present in the SPDX Tools
         diff = compareclass.isTextStandardLicense(license, compareText)
-        if diff.isDifferenceFound():
-            return str(jpype.JString(diff.getDifferenceMessage()))
-        else:
-            return None
-    except jpype.java.lang.Exception as e:
-        print ("Caught the Following ERROR: ", e)
+        isDifferenceFound = jpype.JBoolean(diff.isDifferenceFound())
         jpype.detachThreadFromJVM()
+        return isDifferenceFound
+    except:
+        jpype.detachThreadFromJVM()
+        raise

@@ -3,7 +3,8 @@ import argparse
 from pyfiglet import figlet_format
 
 from compare import compare
-from utils import colors, getListedLicense, checkTextStandardLicense
+from difference import generate_diff
+from utils import checkTextStandardLicense, colors, getListedLicense
 
 
 def main():
@@ -19,23 +20,25 @@ def main():
         inputText = file.read()
     inputText = bytes(inputText, 'utf-8').decode('unicode-escape')
     result = compare(inputText, limit)
-    print(colors('STATUS', 92))
 
     # When limit < score or if its a perfect match
     if len(result) == 1:
         (license, score) = list(result.items())[0]
+        print(colors('STATUS', 92))
         print('Input license text matches with that of {} with a dice coefficient of {}'.format(license, score))
 
     else:
         close_matches = {licenseName: score for licenseName, score in result.items() if threshold<score<1.0}
         if all(value < threshold for value in result.values()):
             print('There is not enough confidence threshold for the text to match against the SPDX License database.')
-        if len(close_matches):
-            licenseID = max(close_matches)
+        if close_matches:
+            licenseID = max(close_matches, key=close_matches.get)
             listedLicense = getListedLicense(licenseID)
             differences = checkTextStandardLicense(listedLicense, inputText)
-            print('\nThe given license text has the following differences:')
-            print(colors(differences, 92))
+            if differences:
+                generate_diff(licenseID, inputText)
+            else:
+                print(colors('The given license is a SPDX Standard License.', 92))
 
 
 
