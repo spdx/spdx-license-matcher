@@ -15,13 +15,10 @@ def get_dice_coefficient(a_bigram, b_bigram):
     # Case for empty license text
     if not len(a_bigram) or not len(b_bigram):
         return 0.0
+    
     # Case for true duplicates
-    if a_bigram == b_bigram:
+    if len(a_bigram) == len(b_bigram) and a_bigram == b_bigram:
         return 1.0
-    # Spl case: if a_bigram != b_bigram, and a_bigram or b_bigram is made up of single characters,
-    # then there is no possible match
-    if len(a_bigram) == 1 or len(b_bigram) == 1:
-        return 0.0
 
     a_bigram.sort()
     b_bigram.sort()
