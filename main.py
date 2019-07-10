@@ -2,9 +2,10 @@ import argparse
 
 from pyfiglet import figlet_format
 
-from compare import compare
-from difference import generate_diff
-from utils import checkTextStandardLicense, colors, getListedLicense
+from compare import get_close_matches
+from difference import generate_diff, get_similarity_percent
+from utils import (checkTextStandardLicense, colors, get_spdx_license_text,
+                   getListedLicense)
 
 
 def main():
@@ -19,27 +20,37 @@ def main():
     with open(filename) as file:
         inputText = file.read()
     inputText = bytes(inputText, 'utf-8').decode('unicode-escape')
-    result = compare(inputText, limit)
+    matches = get_close_matches(inputText, threshold, limit)
+
+    if not matches:
+        print('There is not enough confidence threshold for the text to match against the SPDX License database.')
 
     # When limit < score or if its a perfect match
-    if len(result) == 1:
-        (license, score) = list(result.items())[0]
-        print(colors('STATUS', 92))
-        print('Input license text matches with that of {} with a dice coefficient of {}'.format(license, score))
-
+    elif 1.0 in matches.values() or all(limit < score for score in matches.values()):
+        matchingString = 'The following license ID(s) match: ' + ", ".join(matches.keys())
+        print(colors(matchingString, 92))
     else:
-        close_matches = {licenseName: score for licenseName, score in result.items() if threshold<score<1.0}
-        if all(value < threshold for value in result.values()):
-            print('There is not enough confidence threshold for the text to match against the SPDX License database.')
-        if close_matches:
-            licenseID = max(close_matches, key=close_matches.get)
+        for licenseID in matches:
             listedLicense = getListedLicense(licenseID)
-            differences = checkTextStandardLicense(listedLicense, inputText)
-            if differences:
-                generate_diff(licenseID, inputText)
-            else:
-                print(colors('The given license is a SPDX Standard License.', 92))
-
+            isTextStandard = checkTextStandardLicense(listedLicense, inputText)
+            if not isTextStandard:
+                matchingString = 'The following license ID(s) match: ' + licenseID
+                print(colors(matchingString, 92))
+                break
+        else:
+            licenseID = max(matches, key=matches.get)
+            spdxLicenseText = get_spdx_license_text(licenseID)
+            similarityPercent = get_similarity_percent(spdxLicenseText, inputText)
+            print(colors('\nThe given license text matches {}% with that of {} based on Levenstein distance.'.format(similarityPercent, licenseID), 94))
+            differences = generate_diff(spdxLicenseText, inputText)
+            for line in differences:
+                if line[0] == '+':
+                    line = colors(line, 92)
+                if line[0] == '-':
+                    line = colors(line, 91)
+                if line[0] == '@':
+                    line = colors(line, 90)
+                print(line)
 
 
 if __name__ == "__main__":

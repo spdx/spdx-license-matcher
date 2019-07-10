@@ -3,6 +3,7 @@ import os
 from io import BytesIO
 
 import jpype
+import requests
 
 
 def colors(string, color):
@@ -122,3 +123,21 @@ def checkTextStandardLicense(license, compareText):
     except:
         jpype.detachThreadFromJVM()
         raise
+
+
+def get_spdx_license_text(licenseId):
+    """Get the SPDX license text of the closely matched license.
+
+    Arguments:
+        licenseId {string} -- License Id of the closely matched license.
+
+    Returns:
+        string -- returns the spdx license text.
+    """
+    try:
+        res = requests.get('https://spdx.org/licenses/{}.json'.format(licenseId))
+    except requests.exceptions.RequestException as e:
+        print(e)
+        raise
+
+    return res.json()['licenseText']

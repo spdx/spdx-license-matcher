@@ -1,48 +1,35 @@
 import difflib
-import sys
 
 import jellyfish
-import requests
-
-from utils import colors
 
 
-def generate_diff(licenseId, inputLicenseText):
+def generate_diff(originalLicenseText, inputLicenseText):
     """Generate difference of the input license text with that of SPDX license.
-    
+
     Arguments:
-        licenseId {string} -- license id that closely matches with the input license text.
+        originalLicenseText {string} -- SPDX license text of the closely matched license.
         inputLicenseText {string} -- license text input by the user.
+
+    Returns:
+        list -- list of lines containing the difference between the two license texts.
     """
-    try:
-        res = requests.get('https://spdx.org/licenses/{}.json'.format(licenseId))
-    except requests.exceptions.RequestException as e:
-        print(e)
-        sys.exit(1)
-    originalLicenseText = res.json()['licenseText']
-    levDis = get_levenshtein_distance(originalLicenseText, inputLicenseText)
-    bigger = max(len(originalLicenseText), len(inputLicenseText))
-    similarityPercentage = round((bigger - levDis) / bigger * 100, 2)
-    print(colors('\nThe given license text matches {}% with that of {} based on Levenstein distance.'.format(similarityPercentage, licenseId), 94))
-
+    lines = []
     for line in difflib.unified_diff(originalLicenseText.splitlines(), inputLicenseText.splitlines()):
-        if line[0] == '+':
-            line = colors(line, 92)
-        if line[0] == '-':
-            line = colors(line, 91)
-        if line[0] == '@':
-            line = colors(line, 90)
-        print(line)
+        lines.append(line)
+    return lines
 
 
-def get_levenshtein_distance(text1, text2):
-    """Levenshtein distance is a string metric for measuring the difference between two sequences.
-    
+def get_similarity_percent(text1, text2):
+    """Levenshtein distance, a string metric for measuring the difference between two sequences, is used to calculate the similarity percentage between two license texts.
+
     Arguments:
         text1 {string} -- string 1
         text2 {string} -- string 2
-    
+
     Returns:
-        float -- levenshtein distance between the two given texts.
+        float -- similarity percentage between the two given texts.
     """
-    return jellyfish.levenshtein_distance(text1, text2)
+    levDis = jellyfish.levenshtein_distance(text1, text2)
+    bigger = max(len(text1), len(text2))
+    similarityPercentage = round((bigger - levDis) / bigger * 100, 2)
+    return similarityPercentage
