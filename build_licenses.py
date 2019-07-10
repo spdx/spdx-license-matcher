@@ -15,7 +15,7 @@ def get_url(url):
     return res
 
 
-def get_set_data():
+def build_spdx_licenses():
     """ Get data from SPDX license list and set data in redis.
     """
     url = 'https://spdx.org/licenses/licenses.json'
@@ -46,4 +46,4 @@ def get_set_data():
 
 
 if __name__ == "__main__":
-    get_set_data()
+    build_spdx_licenses()
