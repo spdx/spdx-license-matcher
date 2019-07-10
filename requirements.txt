@@ -1,5 +1,5 @@
 redis
-pyfiglet
 requests
 jpype1
 jellyfish
+click
