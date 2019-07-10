@@ -1,4 +1,3 @@
-import sys
 from concurrent.futures import ThreadPoolExecutor
 
 import redis
@@ -30,7 +29,7 @@ def get_set_data():
     licenses = licensesJson['licenses']
     licensesUrl = [license.get('detailsUrl') for license in licenses]
 
-    with ThreadPoolExecutor(max_workers=8) as pool:
+    with ThreadPoolExecutor(max_workers=2) as pool:
         responses = list(pool.map(get_url, licensesUrl))
 
     for response in responses:
@@ -43,7 +42,7 @@ def get_set_data():
             r.set(licenseName, compressedText)
         except Exception as e:
             print(e)
-            sys.exit(0)
+            raise
 
 
 if __name__ == "__main__":
