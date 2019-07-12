@@ -136,8 +136,9 @@ def get_spdx_license_text(licenseId):
     """
     try:
         res = requests.get('https://spdx.org/licenses/{}.json'.format(licenseId))
-    except requests.exceptions.RequestException as e:
-        print(e)
+        res.raise_for_status()
+    except requests.exceptions.HTTPError as e:
         raise
-
+    except requests.exceptions.RequestException as e:
+        raise
     return res.json()['licenseText']
