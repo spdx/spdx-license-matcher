@@ -1,8 +1,8 @@
 import click
 
-from computation import get_close_matches, get_matching_string
-from difference import generate_diff, get_similarity_percent
-from utils import colors, get_spdx_license_text
+from .computation import get_close_matches, get_matching_string
+from .difference import generate_diff, get_similarity_percent
+from .utils import colors, get_spdx_license_text
 
 
 @click.command()

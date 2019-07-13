@@ -3,8 +3,8 @@ from concurrent.futures import ThreadPoolExecutor
 import redis
 import requests
 
-from normalize import normalize
-from utils import compressStringToBytes
+from .normalize import normalize
+from .utils import compressStringToBytes
 
 
 def get_url(url):

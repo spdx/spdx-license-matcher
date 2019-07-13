@@ -1,9 +1,9 @@
 import redis
 
-from bigrams import generate_bigrams
-from normalize import normalize
-from sorensen_dice import get_dice_coefficient
-from utils import (checkTextStandardLicense, decompressBytesToString,
+from .bigrams import generate_bigrams
+from .normalize import normalize
+from .sorensen_dice import get_dice_coefficient
+from .utils import (checkTextStandardLicense, decompressBytesToString,
                    getListedLicense)
 
 
