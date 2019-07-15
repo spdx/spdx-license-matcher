@@ -1,6 +1,5 @@
-import unicodedata
+# -*- coding: utf-8 -*-
 import re
-
 
 URL_REGEX = r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
 COPYRIGHT_NOTICE_REGEX = r"((?<=\n)|.*)Copyright.+(?=\n)|Copyright.+\\n"
@@ -64,8 +63,6 @@ def normalize(licenseText):
     Returns:
         string -- license text nomalized with all the SPDX matching guidelines.
     """
-    # Normalizes license text with NFC or Normal form composed.
-    licenseText = str(unicodedata.normalize('NFC', licenseText))
 
     # To avoid a possibility of a non-match due to urls not being same.
     licenseText = re.sub(URL_REGEX, 'normalized/url', licenseText)

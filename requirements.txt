@@ -3,3 +3,4 @@ requests
 jpype1
 jellyfish
 click
+futures; python_version == "2.7"

@@ -1,4 +1,5 @@
 import click
+import codecs
 
 from .build_licenses import build_spdx_licenses, is_keys_empty
 from .computation import get_close_matches, get_matching_string
@@ -7,18 +8,21 @@ from .utils import colors, get_spdx_license_text
 
 
 @click.command()
-@click.option('--text_file', '-f', type=click.File('r'), help='File in which there is the text you want to match against the SPDX License database.'
-         'If not provided, a prompt will allow you to type the input text.')
+@click.option('--text_file', '-f', required=True, help='The name of the file in which there is the text you want to match against the SPDX License database.')
 @click.option('--threshold', '-t', default=0.9, type = click.FloatRange(0.0, 1.0), help='Confidence threshold below which we just won"t consider it a match.', show_default=True)
 @click.option('--limit', '-l', default=0.99, type=click.FloatRange(0.9, 1.0), help='Limit at which we will consider a match as a perfect match.', show_default=True)
 @click.option('--build/--no-build', default=False, help='Builds the SPDX license list in the database. If licenses are already present it will update the redis database.')
 def matcher(text_file, threshold, limit, build):
     """SPDX License matcher to match license text against the SPDX license list using an algorithm which finds close matches. """
-    if text_file:
-        inputText = text_file.read()
-    else:
-        inputText = click.prompt('Enter a text', type=str)
-    inputText = bytes(inputText, 'utf-8').decode('unicode-escape')
+    try:
+
+        # For python 2
+        inputText = codecs.open(text_file, 'r', encoding='string_escape').read()
+        inputText = unicode(inputText, 'utf-8')
+    except:
+        # For python 3
+        inputText = codecs.open(text_file, 'r', encoding='unicode_escape').read()
+
     if build or is_keys_empty():
         click.echo('Building SPDX License List. This may take a while...')
         build_spdx_licenses()

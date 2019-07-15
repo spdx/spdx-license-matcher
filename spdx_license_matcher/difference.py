@@ -29,7 +29,7 @@ def get_similarity_percent(text1, text2):
     Returns:
         float -- similarity percentage between the two given texts.
     """
-    levDis = jellyfish.levenshtein_distance(text1, text2)
-    bigger = max(len(text1), len(text2))
+    levDis = float(jellyfish.levenshtein_distance(text1, text2))
+    bigger = float(max(len(text1), len(text2)))
     similarityPercentage = round((bigger - levDis) / bigger * 100, 2)
     return similarityPercentage
