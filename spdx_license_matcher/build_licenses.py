@@ -6,6 +6,8 @@ import requests
 from .normalize import normalize
 from .utils import compressStringToBytes
 
+r = redis.StrictRedis(host='localhost', port=6379, db=0)
+
 
 def get_url(url):
     """GET URL and return response"""
@@ -19,7 +21,6 @@ def build_spdx_licenses():
     """ Get data from SPDX license list and set data in redis.
     """
     url = 'https://spdx.org/licenses/licenses.json'
-    r = redis.StrictRedis(host='localhost', port=6379, db=0)
 
     # Delete all the keys in the current database
     r.flushdb()
@@ -45,5 +46,10 @@ def build_spdx_licenses():
             raise
 
 
-if __name__ == "__main__":
-    build_spdx_licenses()
+def is_keys_empty():
+    """To check if the keys in redis is present or not.
+
+    Returns:
+        bool -- returns if the spdx licenses is present in the redis database or not.
+    """
+    return True if r.keys('*') == [] else False
