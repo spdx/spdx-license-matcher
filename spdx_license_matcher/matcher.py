@@ -1,5 +1,6 @@
 import click
 import codecs
+import redis
 
 from .build_licenses import build_spdx_licenses, is_keys_empty
 from .computation import get_close_matches, get_matching_string
@@ -27,8 +28,12 @@ def matcher(text_file, threshold, limit, build):
         click.echo('Building SPDX License List. This may take a while...')
         build_spdx_licenses()
 
-    matches = get_close_matches(inputText, threshold, limit)
-    matchingString = get_matching_string(matches, limit, inputText)
+    r = redis.StrictRedis(host='localhost', port=6379, db=0)
+    keys = r.keys()
+    values = r.mget(keys)
+    licenseData = dict(zip(keys, values))
+    matches = get_close_matches(inputText, licenseData, threshold, limit)
+    matchingString = get_matching_string(matches, inputText, limit)
     if matchingString == '':
         licenseID = max(matches, key=matches.get)
         spdxLicenseText = get_spdx_license_text(licenseID)

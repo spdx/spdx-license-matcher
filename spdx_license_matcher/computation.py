@@ -1,5 +1,3 @@
-import redis
-
 from .bigrams import generate_bigrams
 from .normalize import normalize
 from .sorensen_dice import get_dice_coefficient
@@ -7,7 +5,7 @@ from .utils import (checkTextStandardLicense, decompressBytesToString,
                    getListedLicense)
 
 
-def get_close_matches(inputText, threshold, limit):
+def get_close_matches(inputText, licenseData, threshold=0.9, limit=0.99):
     """Normalizes the given license text and forms bigrams before comparing it
     with a database of known licenses.
 
@@ -17,14 +15,17 @@ def get_close_matches(inputText, threshold, limit):
     Returns:
         dictionary -- dictionary with license name as key and dice coefficient as value.
     """
-    normalizedInputText = normalize(inputText)
-    aBigram = generate_bigrams(normalizedInputText)
-    r = redis.StrictRedis(host='localhost', port=6379, db=0)
     matches = {}
     perfectMatches = {}
-    for key in r.keys('*'):
-        licenseName = key.decode('utf-8')
-        normalizedLicenseText = decompressBytesToString(r.get(key))
+    normalizedInputText = normalize(inputText)
+    aBigram = generate_bigrams(normalizedInputText)
+    for key in licenseData.keys():
+        try:
+            licenseName = key.decode('utf-8')
+            normalizedLicenseText = decompressBytesToString(licenseData.get(key))
+        except AttributeError:
+            licenseName = key
+            normalizedLicenseText = normalize(licenseData.get(key))
         bBigram = generate_bigrams(normalizedLicenseText)
         score = get_dice_coefficient(aBigram, bBigram)
 
@@ -38,7 +39,7 @@ def get_close_matches(inputText, threshold, limit):
     return matches
 
 
-def get_matching_string(matches, limit, inputText):
+def get_matching_string(matches, inputText, limit=0.99):
     """Return the matching string with all of the license IDs matched with the input license text if none matches then it returns empty string.
     
     Arguments:
