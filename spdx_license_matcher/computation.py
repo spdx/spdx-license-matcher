@@ -23,7 +23,7 @@ def get_close_matches(inputText, licenseData, threshold=0.9, limit=0.99):
         try:
             licenseName = key.decode('utf-8')
             normalizedLicenseText = decompressBytesToString(licenseData.get(key))
-        except AttributeError:
+        except IOError:
             licenseName = key
             normalizedLicenseText = normalize(licenseData.get(key))
         bBigram = generate_bigrams(normalizedLicenseText)
