@@ -1,6 +1,6 @@
-redis
-requests
-jpype1
-jellyfish
-click
+redis==3.2.1
+requests==2.22.0
+jpype1==0.6.3
+jellyfish==0.6.1
+click==7.0
 futures; python_version == "2.7"
