@@ -74,8 +74,9 @@ def getListedLicense(licenseId):
     if (jpype.isJVMStarted()==0):
 
         # If JVM not already started, start it, attach a Thread and start processing the request
-        classpath = os.path.join(os.path.abspath("."), "tool.jar")
-        jpype.startJVM(jpype.getDefaultJVMPath(), "-ea", "-Djava.class.path=%s"%classpath, convertStrings=False)
+        dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        classpath = os.path.join(dirpath, "tool.jar")
+        jpype.startJVM(jpype.getDefaultJVMPath(), "-ea", "-Djava.class.path=%s"%classpath)
 
     # Attach a Thread and start processing the request
     jpype.attachThreadToJVM()
@@ -106,8 +107,9 @@ def checkTextStandardLicense(license, compareText):
     if (jpype.isJVMStarted()==0):
 
         # If JVM not already started, start it, attach a Thread and start processing the request
-        classpath = os.path.join(os.path.abspath("."), "tool.jar")
-        jpype.startJVM(jpype.getDefaultJVMPath(), "-ea", "-Djava.class.path=%s"%classpath, convertStrings=False)
+        dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        classpath = os.path.join(dirpath, "tool.jar")
+        jpype.startJVM(jpype.getDefaultJVMPath(), "-ea", "-Djava.class.path=%s"%classpath)
 
     # Attach a Thread and start processing the request
     jpype.attachThreadToJVM()
