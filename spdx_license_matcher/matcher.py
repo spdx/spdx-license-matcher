@@ -2,10 +2,10 @@ import click
 import codecs
 import redis
 
-from .build_licenses import build_spdx_licenses, is_keys_empty
-from .computation import get_close_matches, get_matching_string
-from .difference import generate_diff, get_similarity_percent
-from .utils import colors, get_spdx_license_text
+from build_licenses import build_spdx_licenses, is_keys_empty,get_url
+from computation import get_close_matches, get_matching_string
+from difference import generate_diff, get_similarity_percent
+from utils import colors, get_spdx_license_text
 
 
 @click.command()

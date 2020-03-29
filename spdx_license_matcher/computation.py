@@ -1,6 +1,6 @@
-from .normalize import normalize
-from .sorensen_dice import get_dice_coefficient
-from .utils import (checkTextStandardLicense, decompressBytesToString,
+from normalize import normalize
+from sorensen_dice import get_dice_coefficient
+from utils import (checkTextStandardLicense, decompressBytesToString,
                    getListedLicense)
 
 

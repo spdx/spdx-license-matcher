@@ -3,8 +3,6 @@ from concurrent.futures import ThreadPoolExecutor
 import redis
 import requests
 
-from .normalize import normalize
-from .utils import compressStringToBytes
 
 r = redis.StrictRedis(host='localhost', port=6379, db=0)
 
