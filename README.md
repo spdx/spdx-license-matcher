@@ -21,10 +21,9 @@ Ensure that you are using Python3 for installation of the tool.
 ## Usage
 First of all before using the tool you will have to create a database of SPDX license list for this just run `python build_licenses.py`.
 
-To run the tool just use the command `python matcher.py -f <file-name> -t <threshold> -l <limit>`.
+To run the tool just use the command `python matcher.py -f <file-name> -t <threshold>`.
 * `filename` is the file with the license text(if you don't provide the file as well then it will prompt you to add it).
 * `threshold` is a value upto which we will just won't consider a match.(optional)
-* `limit` is the value where if the dice score is above this value then we will consider it a perfect match.(optional)
 
 You can also run `python matcher.py --help` for more info.
 
