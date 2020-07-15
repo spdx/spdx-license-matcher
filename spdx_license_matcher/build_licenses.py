@@ -6,7 +6,7 @@ import requests
 from .normalize import normalize
 from .utils import compressStringToBytes
 
-r = redis.StrictRedis(host='localhost', port=6379, db=0)
+r = redis.StrictRedis(host='redis', port=6379, db=0)
 
 
 def get_url(url):
