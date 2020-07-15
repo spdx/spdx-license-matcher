@@ -28,7 +28,7 @@ def matcher(text_file, threshold, limit, build):
         click.echo('Building SPDX License List. This may take a while...')
         build_spdx_licenses()
 
-    r = redis.StrictRedis(host='localhost', port=6379, db=0)
+    r = redis.StrictRedis(host='redis', port=6379, db=0)
     keys = r.keys()
     values = r.mget(keys)
     licenseData = dict(zip(keys, values))
