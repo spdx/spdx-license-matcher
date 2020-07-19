@@ -6,7 +6,12 @@ import requests
 from .normalize import normalize
 from .utils import compressStringToBytes
 
-r = redis.StrictRedis(host='localhost', port=6379, db=0)
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+r = redis.StrictRedis(host=os.environ.get(key="SPDX_REDIS_HOST", failobj="localhost"), port=6379, db=0)
 
 
 def get_url(url):

@@ -7,6 +7,10 @@ from .computation import get_close_matches, get_matching_string
 from .difference import generate_diff, get_similarity_percent
 from .utils import colors, get_spdx_license_text
 
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 @click.command()
 @click.option('--text_file', '-f', required=True, help='The name of the file in which there is the text you want to match against the SPDX License database.')
@@ -28,7 +32,7 @@ def matcher(text_file, threshold, limit, build):
         click.echo('Building SPDX License List. This may take a while...')
         build_spdx_licenses()
 
-    r = redis.StrictRedis(host='localhost', port=6379, db=0)
+    r = redis.StrictRedis(host=os.environ.get(key="SPDX_REDIS_HOST", failobj="localhost"), port=6379, db=0)
     keys = r.keys()
     values = r.mget(keys)
     licenseData = dict(zip(keys, values))
