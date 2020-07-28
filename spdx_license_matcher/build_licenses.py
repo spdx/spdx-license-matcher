@@ -3,8 +3,6 @@ from concurrent.futures import ThreadPoolExecutor
 import redis
 import requests
 
-from .normalize import normalize
-from .utils import compressStringToBytes
 
 from dotenv import load_dotenv
 import os

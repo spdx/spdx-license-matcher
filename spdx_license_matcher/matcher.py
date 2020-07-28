@@ -2,10 +2,10 @@ import click
 import codecs
 import redis
 
-from .build_licenses import build_spdx_licenses, is_keys_empty
-from .computation import get_close_matches, get_matching_string
-from .difference import generate_diff, get_similarity_percent
-from .utils import colors, get_spdx_license_text
+from build_licenses import build_spdx_licenses, is_keys_empty,get_url
+from computation import get_close_matches, get_matching_string
+from difference import generate_diff, get_similarity_percent
+from utils import colors, get_spdx_license_text
 
 from dotenv import load_dotenv
 import os
@@ -15,9 +15,8 @@ load_dotenv()
 @click.command()
 @click.option('--text_file', '-f', required=True, help='The name of the file in which there is the text you want to match against the SPDX License database.')
 @click.option('--threshold', '-t', default=0.9, type = click.FloatRange(0.0, 1.0), help='Confidence threshold below which we just won"t consider it a match.', show_default=True)
-@click.option('--limit', '-l', default=0.99, type=click.FloatRange(0.9, 1.0), help='Limit at which we will consider a match as a perfect match.', show_default=True)
 @click.option('--build/--no-build', default=False, help='Builds the SPDX license list in the database. If licenses are already present it will update the redis database.')
-def matcher(text_file, threshold, limit, build):
+def matcher(text_file, threshold, build):
     """SPDX License matcher to match license text against the SPDX license list using an algorithm which finds close matches. """
     try:
 
@@ -36,8 +35,8 @@ def matcher(text_file, threshold, limit, build):
     keys = r.keys()
     values = r.mget(keys)
     licenseData = dict(zip(keys, values))
-    matches = get_close_matches(inputText, licenseData, threshold, limit)
-    matchingString = get_matching_string(matches, inputText, limit)
+    matches = get_close_matches(inputText, licenseData, threshold)
+    matchingString = get_matching_string(matches, inputText)
     if matchingString == '':
         licenseID = max(matches, key=matches.get)
         spdxLicenseText = get_spdx_license_text(licenseID)
