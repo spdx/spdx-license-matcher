@@ -2,10 +2,11 @@ from concurrent.futures import ThreadPoolExecutor
 
 import redis
 import requests
-
-
 from dotenv import load_dotenv
 import os
+
+from normalize import normalize
+from utils import compressStringToBytes
 
 load_dotenv()
 
