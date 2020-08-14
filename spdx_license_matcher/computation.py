@@ -3,7 +3,6 @@ from sorensen_dice import get_dice_coefficient
 from utils import (checkTextStandardLicense, decompressBytesToString,
                    getListedLicense)
 
-
 def get_close_matches(inputText, licenseData, threshold=0.9):
     """Normalizes the given license text and forms bigrams before comparing it
     with a database of known licenses.
@@ -17,7 +16,6 @@ def get_close_matches(inputText, licenseData, threshold=0.9):
     matches = {}
     perfectMatches = {}
     normalizedInputText = normalize(inputText)
-    limit = len(normalizedInputText) * threshold/100.0
     for key in licenseData.keys():
         try:
             licenseName = key.decode('utf-8')
@@ -33,7 +31,7 @@ def get_close_matches(inputText, licenseData, threshold=0.9):
             matches[licenseName] = score
     if perfectMatches:
         return perfectMatches
-    matches = {licenseName: score for licenseName, score in matches.items() if score <= limit}
+    matches = {licenseName: score for licenseName, score in matches.items() if score >= threshold}
     return matches
 
 
