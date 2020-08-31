@@ -40,7 +40,7 @@ def get_dice_coefficient(a_license, b_license):
     matches = i = j = 0
     while (i < lena and j < lenb):
         if a_bigram_list[i] == b_bigram_list[j]:
-            matches += 2
+            matches += 1
             i += 1
             j += 1
         elif a_bigram_list[i] < b_bigram_list[j]:
