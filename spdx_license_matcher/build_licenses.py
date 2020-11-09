@@ -5,8 +5,8 @@ import requests
 from dotenv import load_dotenv
 import os
 
-from normalize import normalize
-from utils import compressStringToBytes
+from spdx_license_matcher.normalize import normalize
+from spdx_license_matcher.utils import compressStringToBytes
 
 load_dotenv()
 

@@ -1,6 +1,6 @@
-from normalize import normalize
-from sorensen_dice import get_dice_coefficient
-from utils import (checkTextStandardLicense, decompressBytesToString,
+from spdx_license_matcher.normalize import normalize
+from spdx_license_matcher.sorensen_dice import get_dice_coefficient
+from spdx_license_matcher.utils import (checkTextStandardLicense, decompressBytesToString,
                    getListedLicense)
 
 def get_close_matches(inputText, licenseData, threshold=0.9):
