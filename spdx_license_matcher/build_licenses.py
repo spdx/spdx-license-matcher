@@ -10,7 +10,7 @@ from utils import compressStringToBytes
 
 load_dotenv()
 
-r = redis.StrictRedis(host=os.environ.get(key="SPDX_REDIS_HOST", failobj="localhost"), port=6379, db=0)
+r = redis.StrictRedis(host=os.environ.get(key="SPDX_REDIS_HOST", default="localhost"), port=6379, db=0)
 
 
 def get_url(url):

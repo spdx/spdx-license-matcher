@@ -91,7 +91,7 @@ def normalize(licenseText):
     licenseText = re.sub(BULLETS_NUMBERING_REGEX, " ", licenseText)
 
     # To avoid the possibility of a non-match due to the same word being spelled differently.
-    for initial, final in VARIETAL_WORDS_SPELLING.items():
+    for initial, final in list(VARIETAL_WORDS_SPELLING.items()):
         licenseText = licenseText.replace(initial, final)
 
     # To avoid the possibility of a non-match due to different spacing of words, line breaks, or paragraphs.

@@ -1,7 +1,6 @@
 redis==3.2.1
-requests==2.22.0
-jpype1==0.6.3
+requests==2.24
+jpype1==1.0.1
 jellyfish==0.6.1
 click==7.0
-python-dotenv==0.13.0
-futures; python_version == "2.7"
+python-dotenv==0.14.0

@@ -31,10 +31,10 @@ def matcher(text_file, threshold, build):
         click.echo('Building SPDX License List. This may take a while...')
         build_spdx_licenses()
 
-    r = redis.StrictRedis(host=os.environ.get(key="SPDX_REDIS_HOST", failobj="localhost"), port=6379, db=0)
-    keys = r.keys()
+    r = redis.StrictRedis(host=os.environ.get(key="SPDX_REDIS_HOST", default="localhost"), port=6379, db=0)
+    keys = list(r.keys())
     values = r.mget(keys)
-    licenseData = dict(zip(keys, values))
+    licenseData = dict(list(zip(keys, values)))
     matches = get_close_matches(inputText, licenseData, threshold)
     matchingString = get_matching_string(matches, inputText)
     if matchingString == '':

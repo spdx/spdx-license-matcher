@@ -16,7 +16,7 @@ def get_close_matches(inputText, licenseData, threshold=0.9):
     matches = {}
     perfectMatches = {}
     normalizedInputText = normalize(inputText)
-    for key in licenseData.keys():
+    for key in list(licenseData.keys()):
         try:
             licenseName = key.decode('utf-8')
             normalizedLicenseText = decompressBytesToString(licenseData.get(key))
@@ -31,7 +31,7 @@ def get_close_matches(inputText, licenseData, threshold=0.9):
             matches[licenseName] = score
     if perfectMatches:
         return perfectMatches
-    matches = {licenseName: score for licenseName, score in matches.items() if score >= threshold}
+    matches = {licenseName: score for licenseName, score in list(matches.items()) if score >= threshold}
     return matches
 
 
@@ -49,8 +49,8 @@ def get_matching_string(matches, inputText):
         matchingString = 'There is not enough confidence threshold for the text to match against the SPDX License database.'
         return matchingString
     
-    elif all(score == 1.0 for score in matches.values()):
-        matchingString = 'The following license ID(s) match: ' + ", ".join(matches.keys())
+    elif all(score == 1.0 for score in list(matches.values())):
+        matchingString = 'The following license ID(s) match: ' + ", ".join(list(matches.keys()))
         return matchingString
     
     else:
