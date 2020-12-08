@@ -6,6 +6,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.py.bak
 
 # C extensions
 *.so
@@ -126,5 +127,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# IDEs
+.project
+.pydevproject
+.idea
+org.eclipse.core.resources.prefs
+.vscode
 
 # End of https://www.gitignore.io/api/python

@@ -17,10 +17,38 @@ Ensure that you are using Python3 for installation of the tool.
 
 * Install dependencies inside virtual environment
     * `pip3 install -r requirements.txt`
+    
+* Install redis server on your local machine.
+
+        **For linux users**
+        
+        * Use the command `sudo apt-get install redis-server` to install the redis server.
+
+        **For Mac users**
+
+        * Install the redis by running the command
+
+            `brew install redis`.
+        * If you want to run redis whenever your computer starts then run
+
+            `ln -sfv /usr/local/opt/redis/*.plist ~/Library/LaunchAgents`.
+
+        * To run the redis server use
+
+            `launchctl load ~/Library/LaunchAgents/homebrew.mxcl.redis.plist`.
+        * To test if the redis is working run the command `redis-cli ping`. If it returns `Pong` then you are good to go.
+
+        **For Windows users**
+
+        * Download the redis server from [here](https://github.com/microsoftarchive/redis/releases) and install it.
+    * Make sure redis server is running and keep it running until you are done using the tool.
+
+        *The redis is used to store the license text of license present on the SPDX license list. For the very first time it may take a while to build the license on the redis server.*
+
+        *SPDX License Matcher matches the license text input by the user(via license submittal form) against the data present on the redis to find for duplicate and near matches.*
+
 
 ## Usage
-First of all before using the tool you will have to create a database of SPDX license list for this just run `python build_licenses.py`.
-
 To run the tool just use the command `python matcher.py -f <file-name> -t <threshold>`.
 * `filename` is the file with the license text(if you don't provide the file as well then it will prompt you to add it).
 * `threshold` is a value upto which we will just won't consider a match.(optional)

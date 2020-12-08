@@ -2,10 +2,10 @@ import click
 import codecs
 import redis
 
-from build_licenses import build_spdx_licenses, is_keys_empty,get_url
-from computation import get_close_matches, get_matching_string
-from difference import generate_diff, get_similarity_percent
-from utils import colors, get_spdx_license_text
+from spdx_license_matcher.build_licenses import build_spdx_licenses, is_keys_empty,get_url
+from spdx_license_matcher.computation import get_close_matches, get_matching_string
+from spdx_license_matcher.difference import generate_diff, get_similarity_percent
+from spdx_license_matcher.utils import colors, get_spdx_license_text
 
 from dotenv import load_dotenv
 import os
@@ -31,10 +31,10 @@ def matcher(text_file, threshold, build):
         click.echo('Building SPDX License List. This may take a while...')
         build_spdx_licenses()
 
-    r = redis.StrictRedis(host=os.environ.get(key="SPDX_REDIS_HOST", failobj="localhost"), port=6379, db=0)
-    keys = r.keys()
+    r = redis.StrictRedis(host=os.environ.get(key="SPDX_REDIS_HOST", default="localhost"), port=6379, db=0)
+    keys = list(r.keys())
     values = r.mget(keys)
-    licenseData = dict(zip(keys, values))
+    licenseData = dict(list(zip(keys, values)))
     matches = get_close_matches(inputText, licenseData, threshold)
     matchingString = get_matching_string(matches, inputText)
     if matchingString == '':
