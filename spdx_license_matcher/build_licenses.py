@@ -4,6 +4,7 @@ import redis
 import requests
 from dotenv import load_dotenv
 import os
+from urllib.parse import urljoin
 
 from spdx_license_matcher.normalize import normalize
 from spdx_license_matcher.utils import compressStringToBytes
@@ -32,7 +33,7 @@ def build_spdx_licenses():
     response = requests.get(url)
     licensesJson = response.json()
     licenses = licensesJson['licenses']
-    licensesUrl = [license.get('detailsUrl') for license in licenses]
+    licensesUrl = [urljoin(url, license.get('detailsUrl')) for license in licenses]
 
     with ThreadPoolExecutor(max_workers=2) as pool:
         responses = list(pool.map(get_url, licensesUrl))
