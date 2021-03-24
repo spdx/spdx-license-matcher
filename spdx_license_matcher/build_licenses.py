@@ -33,7 +33,7 @@ def build_spdx_licenses():
     response = requests.get(url)
     licensesJson = response.json()
     licenses = licensesJson['licenses']
-    licensesUrl = [urljoin(url, license.get('detailsUrl')) for license in licenses]
+    licensesUrl = [urljoin(url, license.get('reference')) for license in licenses]
 
     with ThreadPoolExecutor(max_workers=2) as pool:
         responses = list(pool.map(get_url, licensesUrl))
