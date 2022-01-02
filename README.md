@@ -49,7 +49,7 @@ Ensure that you are using Python3 for installation of the tool.
 
 
 ## Usage
-To run the tool just use the command `python matcher.py -f <file-name> -t <threshold>`.
+To run the tool just use the command `python -m spdx_license_matcher.matcher -f <file-name> -t <threshold>`.
 * `filename` is the file with the license text(if you don't provide the file as well then it will prompt you to add it).
 * `threshold` is a value upto which we will just won't consider a match.(optional)
 
