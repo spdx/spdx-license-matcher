@@ -1,5 +1,5 @@
 redis==3.2.1
-requests==2.24
+requests>=2.25
 jpype1==1.2.0
 jellyfish==0.6.1
 click==7.0
