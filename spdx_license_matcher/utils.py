@@ -80,7 +80,7 @@ def getListedLicense(licenseId):
 
     # Attach a Thread and start processing the request
     jpype.attachThreadToJVM()
-    package = jpype.JPackage("org.spdx.rdfparser.license")
+    package = jpype.JPackage("org.spdx.library.model.license")
     licenseinfofactoryclass = package.LicenseInfoFactory
     try:
 
