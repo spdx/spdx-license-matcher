@@ -113,7 +113,7 @@ def checkTextStandardLicense(license, compareText):
 
     # Attach a Thread and start processing the request
     jpype.attachThreadToJVM()
-    package = jpype.JPackage("org.spdx.compare")
+    package = jpype.JPackage("org.spdx.tools.compare")
     compareclass = package.LicenseCompareHelper
     try:
 
