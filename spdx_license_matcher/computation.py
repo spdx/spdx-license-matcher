@@ -20,7 +20,7 @@ def get_close_matches(inputText, licenseData, threshold=0.9):
         try:
             licenseName = key.decode('utf-8')
             normalizedLicenseText = decompressBytesToString(licenseData.get(key))
-        except IOError:
+        except:
             licenseName = key
             normalizedLicenseText = normalize(licenseData.get(key))
         score = get_dice_coefficient(normalizedInputText, normalizedLicenseText)
