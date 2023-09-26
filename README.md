@@ -7,7 +7,7 @@ found to be a close match.
 Ensure that you are using Python3 for installation of the tool.
 
 * Clone the repository
-    * `git clone https://github.com/Ugtan/spdx-license-match-tool.git`
+    * `git clone https://github.com/spdx/spdx-license-match-tool.git`
 
 * Make a Python3 virtual environment
     * `python3 -m venv <name-of-the-virtual-env>`
