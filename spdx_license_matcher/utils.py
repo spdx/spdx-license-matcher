@@ -77,15 +77,15 @@ def getListedLicense(licenseId):
         dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         classpath = os.path.join(dirpath, "tool.jar")
         jpype.startJVM(jpype.getDefaultJVMPath(), "-ea", "-Djava.class.path=%s"%classpath)
-
+        jpype.JPackage("org.spdx.library").SpdxModelFactory.init()
     # Attach a Thread and start processing the request
     jpype.attachThreadToJVM()
-    package = jpype.JPackage("org.spdx.library.model.license")
+    package = jpype.JPackage("org.spdx.library")
     licenseinfofactoryclass = package.LicenseInfoFactory
     try:
 
         # Call the method getListedLicenseById present in the SPDX Tools
-        listed_license = licenseinfofactoryclass.getListedLicenseById(licenseId)
+        listed_license = licenseinfofactoryclass.getListedLicenseByIdCompatV2(licenseId)
         jpype.detachThreadFromJVM()
         return listed_license
     except:
@@ -110,6 +110,7 @@ def checkTextStandardLicense(license, compareText):
         dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         classpath = os.path.join(dirpath, "tool.jar")
         jpype.startJVM(jpype.getDefaultJVMPath(), "-ea", "-Djava.class.path=%s"%classpath)
+        jpype.JPackage("org.spdx.library").SpdxModelFactory.init()
 
     # Attach a Thread and start processing the request
     jpype.attachThreadToJVM()
