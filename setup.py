@@ -18,7 +18,7 @@ setup(
     description="SPDX License matcher matches the license text given by the user against the SPDX license list using an algorithm which finds close matches.",
     long_description=LONG_DESCRIPTION,
     author="SPDX",
-    url="https://github.com/ugtan/spdx-license-match-tool",
+    url="https://github.com/spdx/spdx-license-matcher",
     packages=find_packages(exclude=['tests*']),
     install_requires=requirements,
     setup_requires=['setuptools>=39.0.1'],
