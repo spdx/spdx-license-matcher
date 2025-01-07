@@ -7,16 +7,17 @@ found to be a close match.
 Ensure that you are using Python3 for installation of the tool.
 
 * Clone the repository
-    * `git clone https://github.com/spdx/spdx-license-match-tool.git`
+    * `git clone https://github.com/spdx/spdx-license-matcher.git`
 
 * Make a Python3 virtual environment
+    * `cd spdx-license-matcher`
     * `python3 -m venv <name-of-the-virtual-env>`
 
 * Activate the venv
     * `source <name-of-the-virtual-env>/bin/activate`
 
-* Install dependencies inside virtual environment
-    * `pip3 install -r requirements.txt`
+* Install spdx-license-matcher with required dependencies inside virtual environment
+    * `pip install .`
     
 * Install redis server on your local machine.
 
@@ -49,11 +50,11 @@ Ensure that you are using Python3 for installation of the tool.
 
 
 ## Usage
-To run the tool just use the command `python matcher.py -f <file-name> -t <threshold>`.
+To run the tool just use the command `spdx-license-matcher -f <file-name> -t <threshold>`.
 * `filename` is the file with the license text(if you don't provide the file as well then it will prompt you to add it).
 * `threshold` is a value upto which we will just won't consider a match.(optional)
 
-You can also run `python matcher.py --help` for more info.
+You can also run `spdx-license-matcher --help` for more info.
 
 
 ## Workflow
