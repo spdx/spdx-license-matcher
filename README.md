@@ -44,11 +44,11 @@ Ensure that you are using Python 3 for installation of the tool.
     ```
 
 4. Install spdx-license-matcher with required dependencies inside
-   the virtual environment
+    the virtual environment
 
-   ```shell
-   pip install .
-   ```
+    ```shell
+    pip install .
+    ```
 
 5. Install Redis (or Valkey) server on your local machine
 
@@ -64,19 +64,27 @@ Ensure that you are using Python 3 for installation of the tool.
       brew install redis
       ```
 
-      To run the Redis whenever your computer starts:
-
-      ```shell
-      brew services start redis
-      ```
-
       To run the Redis server:
 
       ```shell
       redis-server /opt/homebrew/etc/redis.conf
       ```
 
-      To test if the Redis is working:
+      To run the Redis whenever your computer starts:
+
+      ```shell
+      brew services start redis
+      ```
+
+    - Windows
+
+      Download the Redis server from
+      <https://github.com/microsoftarchive/redis/releases> and install it.
+
+    Make sure the Redis/Valkey server is running
+    and keep it running until you are done using the tool.
+
+    - To test if the Redis is working:
 
       ```shell
       redis-cli ping
@@ -84,45 +92,39 @@ Ensure that you are using Python 3 for installation of the tool.
 
       If it returns `PONG` then you are good to go.
 
-    - Windows
-
-      Download the Redis server from
-      <https://github.com/microsoftarchive/redis/releases> and install it.
-
-- Make sure the Redis/Valkey server is running
-  and keep it running until you are done using the tool.
-  - For the very first time it may take a while to build the license.
-  - `SPDX_REDIS_HOST` environment variable can be set to the location of your
-    Redis/Valkey server (default is `localhost`). The port is `6379`.
+    - For the very first time it may take a while to build the license.
+    - `SPDX_REDIS_HOST` environment variable can be set to the location of
+      your Redis/Valkey server (default is `localhost`). The port is `6379`.
 
 ## Workflow
 
 The workflow of the tool is as follows:
 
-- Reads the license text as input from the user.
-- Build a Redis/Valkey database with all the license text present on the
-  SPDX License List.
-- Compare the license text with the license text present in the database.
-  - Normalizes the license text based on the SPDX Matching guidelines while
-    ignore the replaceable text
-    and only focusing on substantial text for matching purposes.
-  - Tokenizes the normalized text into a list of bigrams. This is necessary
-    for the token-based algorithm we are using for our use case.
-  - Use a token based similarity metric algorithm namely
-    [Sørensen-Dice algorithm][sorensen-dice] which is based on the logic
-    to find the common tokens, and divide it by the total number of tokens
-    present by combining both of the sets.
-    This algorithm helps us to distinguish our close matches.
-  - A threshold value is used where we just won't consider a match.
-  - If the match is 100% then we say it's a perfect match.
-  - If the match is between a threshold value and 100% then we apply the
-    full matching algorithms and compares the closely matched license text to
-    the license text of SPDX Standard License using a [method][method] present
-    in the SPDX tools.
-    - If there is a match then the given license text matches with the SPDX
-      standard license.
-    - If there is no match then we simply display the differences of the given
-      license text with that of SPDX License List.
+1. Reads the license text as input from the user.
+2. Build a Redis/Valkey database with all the license text present on the
+    SPDX License List.
+3. Compare the license text with the license text present in the database.
+
+    - Normalizes the license text based on the SPDX Matching guidelines while
+      ignore the replaceable text
+      and only focusing on substantial text for matching purposes.
+    - Tokenizes the normalized text into a list of bigrams. This is necessary
+      for the token-based algorithm we are using for our use case.
+    - Use a token based similarity metric algorithm namely
+      [Sørensen-Dice algorithm][sorensen-dice] which is based on the logic
+      to find the common tokens, and divide it by the total number of tokens
+      present by combining both of the sets.
+      This algorithm helps us to distinguish our close matches.
+    - A threshold value is used where we just won't consider a match.
+    - If the match is 100% then we say it's a perfect match.
+    - If the match is between a threshold value and 100% then we apply the
+      full matching algorithms and compares the closely matched license text
+      to the license text of SPDX Standard License using a [method][method]
+      present in the SPDX tools.
+      - If there is a match then the given license text matches with the SPDX
+        standard license.
+      - If there is no match then we simply display the differences of the given
+        license text with that of SPDX License List.
 
 [spdx-license-list]: https://spdx.org/licenses/
 [sorensen-dice]: https://en.wikipedia.org/wiki/Dice-S%C3%B8rensen_coefficient
