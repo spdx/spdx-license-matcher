@@ -12,10 +12,21 @@ import os
 
 load_dotenv()
 
+def _print_version_callback(ctx, param, value):
+    if not value or ctx.resilient_parsing:
+        return
+    try:
+        from spdx_license_matcher import __version__ as ver
+    except Exception:
+        ver = 'unknown'
+    click.echo(ver)
+    ctx.exit()
+
 @click.command()
 @click.option('--text_file', '-f', required=True, help='The name of the file in which there is the text you want to match against the SPDX License database.')
 @click.option('--threshold', '-t', default=0.9, type = click.FloatRange(0.0, 1.0), help='Confidence threshold below which we just won"t consider it a match.', show_default=True)
 @click.option('--build/--no-build', default=False, help='Builds the SPDX license list in the database. If licenses are already present it will update the redis database.')
+@click.option('--version', '-V', is_flag=True, is_eager=True, callback=_print_version_callback, expose_value=False, help='Show version and exit.')
 def matcher(text_file, threshold, build):
     """SPDX License matcher to match license text against the SPDX license list using an algorithm which finds close matches. """
     try:
