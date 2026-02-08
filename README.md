@@ -14,8 +14,8 @@ spdx-license-matcher -f filename -t threshold
 ```
 
 - `filename` is the file with the license text
-  (if not provided, it will prompt you to add it).
-- `threshold` is a value up to which we will just won't consider a match.
+  (required)
+- `threshold` is a value up to which we will just won't consider a match
   (optional)
 
 Run `spdx-license-matcher --help` for more info.
