@@ -126,6 +126,16 @@ The workflow of the tool is as follows:
       - If there is no match then we simply display the differences of the given
         license text with that of SPDX License List.
 
+## History
+
+- This project started as [a Google Summer of Code 2019 project][gsoc2019],
+  with contribution from [@ugtan][].
+- Now maintained by the SPDX community and updated for Python 3.
+- See SPDX's participation in Google Summer of Code (GSoC):
+  <https://github.com/spdx/GSoC>.
+
 [spdx-license-list]: https://spdx.org/licenses/
 [sorensen-dice]: https://en.wikipedia.org/wiki/Dice-S%C3%B8rensen_coefficient
 [method]: https://github.com/spdx/tools/blob/1f4f85ad3fdb63577f9e4db4ccce0c7f894e2f04/src/org/spdx/compare/LicenseCompareHelper.java#L592
+[gsoc2019]: https://summerofcode.withgoogle.com/archive/2019/projects/5687492043341824
+[@ugtan]: https://github.com/ugtan
