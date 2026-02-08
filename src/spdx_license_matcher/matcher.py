@@ -1,5 +1,4 @@
 import click
-import codecs
 import redis
 
 from spdx_license_matcher.build_licenses import build_spdx_licenses, is_keys_empty,get_url
@@ -18,14 +17,9 @@ load_dotenv()
 @click.option('--build/--no-build', default=False, help='Builds the SPDX license list in the database. If licenses are already present it will update the redis database.')
 def matcher(text_file, threshold, build):
     """SPDX License matcher to match license text against the SPDX license list using an algorithm which finds close matches. """
-    try:
-
-        # For python 2
-        inputText = codecs.open(text_file, 'r', encoding='string_escape').read()
-        inputText = unicode(inputText, 'utf-8')
-    except:
-        # For python 3
-        inputText = codecs.open(text_file, 'r', encoding='unicode_escape').read()
+    # Read input file as UTF-8 (Python 3 only)
+    with open(text_file, 'r', encoding='utf-8') as fh:
+        inputText = fh.read()
 
     if build or is_keys_empty():
         click.echo('Building SPDX License List. This may take a while...')
