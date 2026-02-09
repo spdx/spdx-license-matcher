@@ -17,7 +17,7 @@ load_dotenv()
 @click.option('--build/--no-build', default=False, help='Builds the SPDX license list in the database. If licenses are already present it will update the redis database.')
 def matcher(text_file, threshold, build):
     """SPDX License matcher to match license text against the SPDX license list using an algorithm which finds close matches. """
-    # Read input file as UTF-8 (Python 3 only)
+    # Read input file as UTF-8
     with open(text_file, 'r', encoding='utf-8') as fh:
         inputText = fh.read()
 
