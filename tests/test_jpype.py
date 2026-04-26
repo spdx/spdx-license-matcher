@@ -23,6 +23,7 @@ def jvm():
         assert os.path.exists(TOOL_JAR), f"tool.jar not found at {TOOL_JAR}"
         jpype.startJVM(classpath=[TOOL_JAR], convertStrings=False)
         from org.spdx.library import SpdxModelFactory
+
         SpdxModelFactory.init()
 
 
@@ -32,20 +33,23 @@ class TestJVMLifecycle:
 
     def test_tool_jar_loaded(self):
         from org.spdx.library import SpdxModelFactory
+
         assert SpdxModelFactory is not None
 
     def test_license_info_factory_accessible(self):
         from org.spdx.library import LicenseInfoFactory
+
         assert LicenseInfoFactory is not None
 
     def test_compare_helper_accessible(self):
         from org.spdx.utility.compare import LicenseCompareHelper
+
         assert LicenseCompareHelper is not None
 
 
 class TestThreadManagement:
     def test_attach_detach_from_worker_thread(self):
-        JThread = jpype.JClass('java.lang.Thread')
+        JThread = jpype.JClass("java.lang.Thread")
         attached = []
         errors = []
 
@@ -68,7 +72,7 @@ class TestThreadManagement:
         """_jvm_thread() context manager attaches and detaches cleanly."""
         from spdx_license_matcher.utils import _jvm_thread
 
-        JThread = jpype.JClass('java.lang.Thread')
+        JThread = jpype.JClass("java.lang.Thread")
         results = []
         errors = []
 
@@ -90,7 +94,7 @@ class TestThreadManagement:
         """_jvm_thread() detaches even when the body raises."""
         from spdx_license_matcher.utils import _jvm_thread
 
-        JThread = jpype.JClass('java.lang.Thread')
+        JThread = jpype.JClass("java.lang.Thread")
         still_attached = []
         errors = []
 
@@ -114,17 +118,26 @@ class TestThreadManagement:
 class TestSpdxLibraryIntegration:
     def test_get_listed_license_returns_object(self):
         from spdx_license_matcher.utils import getListedLicense
+
         license_obj = getListedLicense("MIT")
         assert license_obj is not None
 
     def test_check_text_standard_license_returns_bool(self):
-        from spdx_license_matcher.utils import checkTextStandardLicense, getListedLicense
+        from spdx_license_matcher.utils import (
+            checkTextStandardLicense,
+            getListedLicense,
+        )
+
         license_obj = getListedLicense("MIT")
         result = checkTextStandardLicense(license_obj, "completely different text")
         assert isinstance(result, bool)
 
     def test_check_text_standard_license_difference_found(self):
-        from spdx_license_matcher.utils import checkTextStandardLicense, getListedLicense
+        from spdx_license_matcher.utils import (
+            checkTextStandardLicense,
+            getListedLicense,
+        )
+
         license_obj = getListedLicense("MIT")
         # unrelated text must differ from the MIT license
         result = checkTextStandardLicense(license_obj, "Permission is NOT granted.")
@@ -133,6 +146,7 @@ class TestSpdxLibraryIntegration:
     def test_ensure_jvm_idempotent(self):
         """Calling _ensure_jvm() when JVM already running must not raise."""
         from spdx_license_matcher.utils import _ensure_jvm
+
         _ensure_jvm()
         _ensure_jvm()
         assert jpype.isJVMStarted()
