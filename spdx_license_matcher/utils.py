@@ -1,9 +1,36 @@
+# SPDX-FileCopyrightText: 2019-present SPDX Contributors
+# SPDX-License-Identifier: Apache-2.0
+
 import gzip
 import os
+from contextlib import contextmanager
 from io import BytesIO
 
 import jpype
+
+# Do not remove this line, it is required to import the Java classes.
+import jpype.imports  # type: ignore[import]  # noqa: F401
 import requests
+
+
+def _ensure_jvm():
+    if not jpype.isJVMStarted():
+        dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        classpath = os.path.join(dirpath, "tool.jar")
+        jpype.startJVM(classpath=[classpath], convertStrings=False)
+        from org.spdx.library import SpdxModelFactory
+
+        SpdxModelFactory.init()
+
+
+@contextmanager
+def _jvm_thread():
+    JThread = jpype.JClass("java.lang.Thread")
+    JThread.attachAsDaemon()
+    try:
+        yield
+    finally:
+        JThread.detach()
 
 
 def colors(string, color):
@@ -13,7 +40,7 @@ def colors(string, color):
         string {string} -- string to be colored.
         color {integer} -- color
     """
-    return("\033[%sm%s\033[0m" % (color, string))
+    return "\033[%sm%s\033[0m" % (color, string)
 
 
 def decompressBytesToString(inputBytes):
@@ -71,26 +98,11 @@ def getListedLicense(licenseId):
     Returns:
         string -- SPDX listed license or null
     """
-    if (jpype.isJVMStarted()==0):
+    _ensure_jvm()
+    with _jvm_thread():
+        from org.spdx.library import LicenseInfoFactory
 
-        # If JVM not already started, start it, attach a Thread and start processing the request
-        dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        classpath = os.path.join(dirpath, "tool.jar")
-        jpype.startJVM(jpype.getDefaultJVMPath(), "-ea", "-Djava.class.path=%s"%classpath)
-        jpype.JPackage("org.spdx.library").SpdxModelFactory.init()
-    # Attach a Thread and start processing the request
-    jpype.attachThreadToJVM()
-    package = jpype.JPackage("org.spdx.library")
-    licenseinfofactoryclass = package.LicenseInfoFactory
-    try:
-
-        # Call the method getListedLicenseById present in the SPDX Tools
-        listed_license = licenseinfofactoryclass.getListedLicenseByIdCompatV2(licenseId)
-        jpype.detachThreadFromJVM()
-        return listed_license
-    except:
-        jpype.detachThreadFromJVM()
-        raise
+        return LicenseInfoFactory.getListedLicenseByIdCompatV2(licenseId)
 
 
 def checkTextStandardLicense(license, compareText):
@@ -101,31 +113,14 @@ def checkTextStandardLicense(license, compareText):
         compareText {string} -- Text to compare with the standard license.
 
     Returns:
-        string -- Difference message if any differences found or None.
+        bool -- True if a difference is found, False if texts match.
     """
+    _ensure_jvm()
+    with _jvm_thread():
+        from org.spdx.utility.compare import LicenseCompareHelper
 
-    if (jpype.isJVMStarted()==0):
-
-        # If JVM not already started, start it, attach a Thread and start processing the request
-        dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        classpath = os.path.join(dirpath, "tool.jar")
-        jpype.startJVM(jpype.getDefaultJVMPath(), "-ea", "-Djava.class.path=%s"%classpath)
-        jpype.JPackage("org.spdx.library").SpdxModelFactory.init()
-
-    # Attach a Thread and start processing the request
-    jpype.attachThreadToJVM()
-    package = jpype.JPackage("org.spdx.utility.compare")
-    compareclass = package.LicenseCompareHelper
-    try:
-
-        # Call the java method isTextStandardLicense present in the SPDX Tools
-        diff = compareclass.isTextStandardLicense(license, compareText)
-        isDifferenceFound = jpype.JBoolean(diff.isDifferenceFound())
-        jpype.detachThreadFromJVM()
-        return isDifferenceFound
-    except:
-        jpype.detachThreadFromJVM()
-        raise
+        diff = LicenseCompareHelper.isTextStandardLicense(license, compareText)
+        return bool(diff.isDifferenceFound())
 
 
 def get_spdx_license_text(licenseId):
@@ -138,7 +133,7 @@ def get_spdx_license_text(licenseId):
         string -- returns the spdx license text.
     """
     try:
-        res = requests.get('https://spdx.org/licenses/{}.json'.format(licenseId))
+        res = requests.get(f"https://spdx.org/licenses/{licenseId}.json")
         res.raise_for_status()
     except requests.exceptions.HTTPError as e:
         raise
