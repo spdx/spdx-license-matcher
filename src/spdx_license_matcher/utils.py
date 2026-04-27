@@ -62,6 +62,14 @@ def compressStringToBytes(inputString):
         compressor.write(chunk)
 
 
+def _get_jar_path():
+    """Resolve path to tool.jar. SPDX_TOOLS_JAR env var overrides the bundled jar."""
+    override = os.environ.get("SPDX_TOOLS_JAR")
+    if override:
+        return override
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), "tool.jar")
+
+
 def getListedLicense(licenseId):
     """Get a SPDX listed license if the given SPDX license ID is present in the SPDX license list otherwise null.
 
@@ -72,12 +80,10 @@ def getListedLicense(licenseId):
         string -- SPDX listed license or null
     """
     if (jpype.isJVMStarted()==0):
-
-        # If JVM not already started, start it, attach a Thread and start processing the request
-        dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        classpath = os.path.join(dirpath, "tool.jar")
+        classpath = _get_jar_path()
         jpype.startJVM(jpype.getDefaultJVMPath(), "-ea", "-Djava.class.path=%s"%classpath)
         jpype.JPackage("org.spdx.library").SpdxModelFactory.init()
+
     # Attach a Thread and start processing the request
     jpype.attachThreadToJVM()
     package = jpype.JPackage("org.spdx.library")
@@ -105,10 +111,7 @@ def checkTextStandardLicense(license, compareText):
     """
 
     if (jpype.isJVMStarted()==0):
-
-        # If JVM not already started, start it, attach a Thread and start processing the request
-        dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        classpath = os.path.join(dirpath, "tool.jar")
+        classpath = _get_jar_path()
         jpype.startJVM(jpype.getDefaultJVMPath(), "-ea", "-Djava.class.path=%s"%classpath)
         jpype.JPackage("org.spdx.library").SpdxModelFactory.init()
 
