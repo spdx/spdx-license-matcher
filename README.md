@@ -15,6 +15,14 @@ if the input license text is found to be a close match.
 
 ## Installation
 
+**As a command-line tool** (recommended — isolated environment, no dependency conflicts):
+
+```sh
+pipx install spdx-license-matcher
+```
+
+**As a library** (inside a project's virtual environment):
+
 ```sh
 pip install spdx-license-matcher
 ```
