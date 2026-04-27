@@ -1,0 +1,59 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "spdx-license-matcher-cli"
+dynamic = ["version"]
+description = "Find the closest SPDX license matches for a given license text."
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.8"
+authors = [
+    { name = "Umang Taneja" },
+    { name = "Gary O'Neall" },
+    { name = "Rohit Lodha" },
+    { name = "SPDX contributors" },
+]
+keywords = ["license", "license-matcher", "spdx", "compliance", "open-source"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Legal Industry",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "click>=8.3.1",
+    "jellyfish>=1.2.1",
+    "jpype1>=1.6.0",
+    "python-dotenv>=1.2.1",
+    "redis>=7.1.0",
+    "requests>=2.32.5",
+]
+
+[project.scripts]
+spdx-license-matcher = "spdx_license_matcher.matcher:matcher"
+
+[project.urls]
+Homepage = "https://github.com/spdx/spdx-license-matcher"
+Issues = "https://github.com/spdx/spdx-license-matcher/issues"
+Source = "https://github.com/spdx/spdx-license-matcher"
+
+[tool.hatch.version]
+path = "src/spdx_license_matcher/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/spdx_license_matcher"]
+artifacts = ["src/spdx_license_matcher/tool.jar"]
+
+[tool.hatch.build.targets.sdist]
+artifacts = ["src/spdx_license_matcher/tool.jar"]
