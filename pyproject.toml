@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "spdx-license-matcher"
+name = "spdx-license-matcher-cli"
 dynamic = ["version"]
 description = "Find the closest SPDX license matches for a given license text."
 readme = "README.md"

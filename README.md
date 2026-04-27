@@ -10,28 +10,28 @@ if the input license text is found to be a close match.
 ## Requirements
 
 - Python 3.8+
-- Java 11+ (required by the bundled SPDX Tools jar)
+- Java 11+ (required by the bundled SPDX Java Tools 2.0.5)
 - Redis server
 
 ## Installation
 
-**As a command-line tool** (recommended — isolated environment, no dependency conflicts):
-
 ```sh
-pipx install spdx-license-matcher
+pipx install spdx-license-matcher-cli
 ```
 
-**As a library** (inside a project's virtual environment):
+Or with uv:
 
 ```sh
-pip install spdx-license-matcher
+uv tool install spdx-license-matcher-cli
 ```
 
-The package bundles `tool.jar` (SPDX Java Tools).
+The package bundles [SPDX Java Tools][tools-java].
 No separate jar download needed.
 
 To use a different jar version,
 set the `SPDX_TOOLS_JAR` environment variable to its path before running.
+
+[tools-java]: https://github.com/spdx/tools-java
 
 ### Install Redis
 
