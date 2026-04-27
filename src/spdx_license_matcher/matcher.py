@@ -26,7 +26,7 @@ def matcher(text_file, threshold, build):
         build_spdx_licenses()
 
     r = redis.StrictRedis(host=os.environ.get(key="SPDX_REDIS_HOST", default="localhost"), port=6379, db=0)
-    keys = list(r.keys())
+    keys = r.keys()
     values = r.mget(keys)
     licenseData = dict(list(zip(keys, values)))
     matches = get_close_matches(inputText, licenseData, threshold)
