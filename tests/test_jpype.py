@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 """Tests for JPype JVM connection, thread management, and SPDX Java library access."""
+
 import os
 import threading
 

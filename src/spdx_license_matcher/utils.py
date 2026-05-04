@@ -54,7 +54,7 @@ def decompressBytesToString(inputBytes):
     """
     buf = BytesIO()
     stream = BytesIO(inputBytes)
-    decompressor = gzip.GzipFile(fileobj=stream, mode='r')
+    decompressor = gzip.GzipFile(fileobj=stream, mode="r")
     while True:  # until EOF
         chunk = decompressor.read(8192)
         if not chunk:
@@ -79,7 +79,7 @@ def compressStringToBytes(inputString):
     buf.write(inputString.encode("utf-8"))
     buf.seek(0)
     stream = BytesIO()
-    compressor = gzip.GzipFile(fileobj=stream, mode='w')
+    compressor = gzip.GzipFile(fileobj=stream, mode="w")
     while True:  # until EOF
         chunk = buf.read(8192)
         if not chunk:  # EOF?
@@ -93,7 +93,13 @@ def _get_jar_path():
     override = os.environ.get("SPDX_TOOLS_JAR")
     if override:
         return override
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), "tool.jar")
+    bundled = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tool.jar")
+    if not os.path.exists(bundled):
+        raise FileNotFoundError(
+            f"Bundled tool.jar not found at {bundled}. "
+            "Please ensure the package was installed correctly or set SPDX_TOOLS_JAR."
+        )
+    return bundled
 
 
 def getListedLicense(licenseId):
@@ -110,7 +116,6 @@ def getListedLicense(licenseId):
         from org.spdx.library import LicenseInfoFactory
 
         return LicenseInfoFactory.getListedLicenseByIdCompatV2(licenseId)
-
 
 
 def checkTextStandardLicense(license, compareText):
@@ -131,7 +136,6 @@ def checkTextStandardLicense(license, compareText):
         return bool(diff.isDifferenceFound())
 
 
-
 def get_spdx_license_text(licenseId):
     """Get the SPDX license text of the closely matched license.
 
@@ -148,4 +152,4 @@ def get_spdx_license_text(licenseId):
         raise
     except requests.exceptions.RequestException:
         raise
-    return res.json()['licenseText']
+    return res.json()["licenseText"]

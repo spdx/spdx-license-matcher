@@ -69,7 +69,6 @@ Set `SPDX_REDIS_HOST` to override the hostname.
 
 To run the tool, use the command:
 
-
 ```sh
 spdx-license-matcher -f <file-name> -t <threshold>
 ```
@@ -119,7 +118,7 @@ The workflow of the tool is as follows:
 ## History
 
 - This project started as [a Google Summer of Code 2019 project][gsoc2019],
-  with contribution from [@ugtan][].
+  with contribution from [@ugtan].
 - Now maintained by the SPDX community and updated for Python 3.
 - See SPDX's participation in Google Summer of Code (GSoC):
   <https://github.com/spdx/GSoC>.

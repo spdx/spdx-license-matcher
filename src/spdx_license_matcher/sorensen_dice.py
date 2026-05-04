@@ -16,7 +16,7 @@ def get_dice_coefficient(a_license, b_license):
     # Case for empty license text
     if not len(a_license) or not len(b_license):
         return 0.0
-    
+
     # Case for true duplicates
     if a_license == b_license:
         return 1.0
@@ -24,10 +24,10 @@ def get_dice_coefficient(a_license, b_license):
     # If a != b, and a or b are single chars, then they can't possibly match
     if len(a_license) == 1 or len(b_license) == 1:
         return 0.0
-    
+
     # Create bigrams
-    a_bigram_list = [a_license[i:i+2] for i in range(len(a_license)-1)]
-    b_bigram_list = [b_license[i:i+2] for i in range(len(b_license)-1)]
+    a_bigram_list = [a_license[i : i + 2] for i in range(len(a_license) - 1)]
+    b_bigram_list = [b_license[i : i + 2] for i in range(len(b_license) - 1)]
 
     a_bigram_list.sort()
     b_bigram_list.sort()
@@ -38,7 +38,7 @@ def get_dice_coefficient(a_license, b_license):
 
     # Matches is used to count the matches between a_bigram_list and b_bigram_list
     matches = i = j = 0
-    while (i < lena and j < lenb):
+    while i < lena and j < lenb:
         if a_bigram_list[i] == b_bigram_list[j]:
             matches += 1
             i += 1
@@ -48,5 +48,5 @@ def get_dice_coefficient(a_license, b_license):
         else:
             j += 1
 
-    score = float(2*matches)/float(lena + lenb)
+    score = float(2 * matches) / float(lena + lenb)
     return score
