@@ -14,7 +14,9 @@ def generate_diff(originalLicenseText, inputLicenseText):
         list -- list of lines containing the difference between the two license texts.
     """
     lines = []
-    for line in difflib.unified_diff(originalLicenseText.splitlines(), inputLicenseText.splitlines()):
+    for line in difflib.unified_diff(
+        originalLicenseText.splitlines(), inputLicenseText.splitlines()
+    ):
         lines.append(line)
     return lines
 

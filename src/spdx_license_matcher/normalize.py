@@ -1,55 +1,59 @@
 import re
 
-URL_REGEX = r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
+URL_REGEX = (
+    r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+"
+)
 COPYRIGHT_NOTICE_REGEX = r"((?<=\n)|.*)Copyright.+(?=\n)|Copyright.+\\n"
 COPYRIGHT_SYMBOLS = r"[©Ⓒⓒ]"
-BULLETS_NUMBERING_REGEX = r"\s(([0-9a-z]\.\s)+|(\([0-9a-z]\)\s)+|(\*\s)+)|(\s\([i]+\)\s)"
+BULLETS_NUMBERING_REGEX = (
+    r"\s(([0-9a-z]\.\s)+|(\([0-9a-z]\)\s)+|(\*\s)+)|(\s\([i]+\)\s)"
+)
 COMMENTS_REGEX = r"(\/\/|\/\*|#) +.*"
 EXTRANEOUS_REGEX = r"(?is)\s*end of terms and conditions.*"
 ADDENDIUM_EXHIBIT_REGEX = r"(?s)(APPENDIX|APADDENDUM|EXHIBIT).*"
 VARIETAL_WORDS_SPELLING = {
-    'acknowledgment': 'acknowledgement',
-    'analogue': 'analog',
-    'analyse': 'analyze',
-    'artefact': 'artifact',
-    'authorisation': 'authorization',
-    'authorised': 'authorized',
-    'calibre': 'caliber',
-    'cancelled': 'canceled',
-    'capitalisations': 'capitalizations',
-    'catalogue': 'catalog',
-    'categorise': 'categorize',
-    'centre': 'center',
-    'emphasised': 'emphasized',
-    'favour': 'favor',
-    'favourite': 'favorite',
-    'fulfil': 'fulfill',
-    'fulfilment': 'fulfillment',
-    'initialise': 'initialize',
-    'judgment': 'judgement',
-    'labelling': 'labeling',
-    'labour': 'labor',
-    'licence': 'license',
-    'maximise': 'maximize',
-    'modelled': 'modeled',
-    'modelling': 'modeling',
-    'offence': 'offense',
-    'optimise': 'optimize',
-    'organisation': 'organization',
-    'organise': 'organize',
-    'practise': 'practice',
-    'programme': 'program',
-    'realise': 'realize',
-    'recognise': 'recognize',
-    'signalling': 'signaling',
-    'sub-license': 'sublicense',
-    'sub license': 'sublicense',
-    'utilisation': 'utilization',
-    'whilst': 'while',
-    'wilful': 'wilfull',
-    'non-commercial': 'noncommercial',
-    'per cent': 'percent',
-    'owner': 'holder'
+    "acknowledgment": "acknowledgement",
+    "analogue": "analog",
+    "analyse": "analyze",
+    "artefact": "artifact",
+    "authorisation": "authorization",
+    "authorised": "authorized",
+    "calibre": "caliber",
+    "cancelled": "canceled",
+    "capitalisations": "capitalizations",
+    "catalogue": "catalog",
+    "categorise": "categorize",
+    "centre": "center",
+    "emphasised": "emphasized",
+    "favour": "favor",
+    "favourite": "favorite",
+    "fulfil": "fulfill",
+    "fulfilment": "fulfillment",
+    "initialise": "initialize",
+    "judgment": "judgement",
+    "labelling": "labeling",
+    "labour": "labor",
+    "licence": "license",
+    "maximise": "maximize",
+    "modelled": "modeled",
+    "modelling": "modeling",
+    "offence": "offense",
+    "optimise": "optimize",
+    "organisation": "organization",
+    "organise": "organize",
+    "practise": "practice",
+    "programme": "program",
+    "realise": "realize",
+    "recognise": "recognize",
+    "signalling": "signaling",
+    "sub-license": "sublicense",
+    "sub license": "sublicense",
+    "utilisation": "utilization",
+    "whilst": "while",
+    "wilful": "wilfull",
+    "non-commercial": "noncommercial",
+    "per cent": "percent",
+    "owner": "holder",
 }
 
 
@@ -64,7 +68,7 @@ def normalize(licenseText):
     """
 
     # To avoid a possibility of a non-match due to urls not being same.
-    licenseText = re.sub(URL_REGEX, 'normalized/url', licenseText)
+    licenseText = re.sub(URL_REGEX, "normalized/url", licenseText)
 
     # To avoid the license mismatch merely due to the existence or absence of code comment indicators placed within the license text, they are just removed.
     licenseText = re.sub(COMMENTS_REGEX, "", licenseText)
@@ -83,8 +87,8 @@ def normalize(licenseText):
     licenseText = licenseText.lower()
 
     # To remove the license name or title present at the beginning of the license text.
-    if 'license' in licenseText.split('\n')[0]:
-        licenseText = '\n'.join(licenseText.split('\n')[1:])
+    if "license" in licenseText.split("\n")[0]:
+        licenseText = "\n".join(licenseText.split("\n")[1:])
 
     # To avoid the possibility of a non-match due to variations of bullets, numbers, letter, or no bullets used are simply removed.
     licenseText = re.sub(BULLETS_NUMBERING_REGEX, " ", licenseText)
