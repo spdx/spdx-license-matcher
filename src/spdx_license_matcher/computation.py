@@ -1,7 +1,16 @@
+# SPDX-FileCopyrightText: 2019-present SPDX Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+"""Algorithms for finding close matches and validating them against the SPDX License List."""
+
 from spdx_license_matcher.normalize import normalize
 from spdx_license_matcher.sorensen_dice import get_dice_coefficient
-from spdx_license_matcher.utils import (checkTextStandardLicense, decompressBytesToString,
-                   getListedLicense)
+from spdx_license_matcher.utils import (
+    checkTextStandardLicense,
+    decompressBytesToString,
+    getListedLicense,
+)
+
 
 def get_close_matches(inputText, licenseData, threshold=0.9):
     """Normalizes the given license text and forms bigrams before comparing it
@@ -16,11 +25,11 @@ def get_close_matches(inputText, licenseData, threshold=0.9):
     matches = {}
     perfectMatches = {}
     normalizedInputText = normalize(inputText)
-    for key in list(licenseData.keys()):
+    for key in licenseData:
         try:
-            licenseName = key.decode('utf-8')
+            licenseName = key.decode("utf-8")
             normalizedLicenseText = decompressBytesToString(licenseData.get(key))
-        except:
+        except Exception:
             licenseName = key
             normalizedLicenseText = normalize(licenseData.get(key))
         score = get_dice_coefficient(normalizedInputText, normalizedLicenseText)
@@ -31,34 +40,40 @@ def get_close_matches(inputText, licenseData, threshold=0.9):
             matches[licenseName] = score
     if perfectMatches:
         return perfectMatches
-    matches = {licenseName: score for licenseName, score in list(matches.items()) if score >= threshold}
+    matches = {
+        licenseName: score
+        for licenseName, score in matches.items()
+        if score >= threshold
+    }
     return matches
 
 
 def get_matching_string(matches, inputText):
     """Return the matching string with all of the license IDs matched with the input license text if none matches then it returns empty string.
-    
+
     Arguments:
         matches {dictionary} -- Contains the license IDs(which matched with the input text) with their respective sorensen dice score as valus.
         inputText {string} -- license text input by the user.
-    
+
     Returns:
         string -- matching string containing the license IDs that actually matched else returns empty string.
     """
     if not matches:
-        matchingString = 'There is not enough confidence threshold for the text to match against the SPDX License database.'
+        matchingString = "There is not enough confidence threshold for the text to match against the SPDX License database."
         return matchingString
-    
-    elif all(score == 1.0 for score in list(matches.values())):
-        matchingString = 'The following license ID(s) match: ' + ", ".join(list(matches.keys()))
+
+    elif all(score == 1.0 for score in matches.values()):
+        matchingString = "The following license ID(s) match: " + ", ".join(
+            matches.keys()
+        )
         return matchingString
-    
+
     else:
         for licenseID in matches:
             listedLicense = getListedLicense(licenseID)
             isTextStandard = checkTextStandardLicense(listedLicense, inputText)
             if not isTextStandard:
-                matchingString = 'The following license ID(s) match: ' + licenseID
+                matchingString = "The following license ID(s) match: " + licenseID
                 return matchingString
         else:
-            return ''
+            return ""

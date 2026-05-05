@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2019-present SPDX Contributors
 # SPDX-License-Identifier: Apache-2.0
 
+"""Utility functions for Java library interaction and text compression."""
+
 import gzip
 import os
 from contextlib import contextmanager
@@ -15,8 +17,7 @@ import requests
 
 def _ensure_jvm():
     if not jpype.isJVMStarted():
-        dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        classpath = os.path.join(dirpath, "tool.jar")
+        classpath = _get_jar_path()
         jpype.startJVM(classpath=[classpath], convertStrings=False)
         from org.spdx.library import SpdxModelFactory
 
@@ -55,7 +56,7 @@ def decompressBytesToString(inputBytes):
     """
     buf = BytesIO()
     stream = BytesIO(inputBytes)
-    decompressor = gzip.GzipFile(fileobj=stream, mode='r')
+    decompressor = gzip.GzipFile(fileobj=stream, mode="r")
     while True:  # until EOF
         chunk = decompressor.read(8192)
         if not chunk:
@@ -80,13 +81,27 @@ def compressStringToBytes(inputString):
     buf.write(inputString.encode("utf-8"))
     buf.seek(0)
     stream = BytesIO()
-    compressor = gzip.GzipFile(fileobj=stream, mode='w')
+    compressor = gzip.GzipFile(fileobj=stream, mode="w")
     while True:  # until EOF
         chunk = buf.read(8192)
         if not chunk:  # EOF?
             compressor.close()
             return stream.getvalue()
         compressor.write(chunk)
+
+
+def _get_jar_path():
+    """Resolve path to tool.jar. SPDX_TOOLS_JAR env var overrides the bundled jar."""
+    override = os.environ.get("SPDX_TOOLS_JAR")
+    if override:
+        return override
+    bundled = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tool.jar")
+    if not os.path.exists(bundled):
+        raise FileNotFoundError(
+            f"Bundled tool.jar not found at {bundled}. "
+            "Please ensure the package was installed correctly or set SPDX_TOOLS_JAR."
+        )
+    return bundled
 
 
 def getListedLicense(licenseId):
@@ -139,4 +154,4 @@ def get_spdx_license_text(licenseId):
         raise
     except requests.exceptions.RequestException:
         raise
-    return res.json()['licenseText']
+    return res.json()["licenseText"]
