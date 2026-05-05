@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2019-present SPDX Contributors
 # SPDX-License-Identifier: Apache-2.0
 
+"""Utility functions for Java library interaction and text compression."""
+
 import gzip
 import os
 from contextlib import contextmanager

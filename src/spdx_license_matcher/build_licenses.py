@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2019-present SPDX Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+"""Logic to fetch SPDX licenses and populate the Redis database."""
+
 from concurrent.futures import ThreadPoolExecutor
 
 import redis
