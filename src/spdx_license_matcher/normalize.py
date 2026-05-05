@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2019-present SPDX Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+"""Text normalization based on SPDX Matching Guidelines."""
+
 import re
 
 URL_REGEX = (

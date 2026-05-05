@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2019-present SPDX Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+"""Algorithms for finding close matches and validating them against the SPDX License List."""
+
 from spdx_license_matcher.normalize import normalize
 from spdx_license_matcher.sorensen_dice import get_dice_coefficient
 from spdx_license_matcher.utils import (

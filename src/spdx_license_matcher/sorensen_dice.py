@@ -1,4 +1,11 @@
-# Code from https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Dice%27s_coefficient
+# SPDX-FileCopyrightText: 2019-present SPDX Contributors
+# SPDX-License-Identifier: Apache-2.0
+
+"""Implementation of the Sørensen-Dice similarity coefficient for license text matching."""
+
+# Code from
+# https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Dice%27s_coefficient
+
 def get_dice_coefficient(a_license, b_license):
     """Sorensen dice coefficient may be calculated for two strings,
     x and y for the purpose of string similarity measure. Dice coefficient
