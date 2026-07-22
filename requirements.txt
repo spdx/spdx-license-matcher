@@ -1,7 +1,7 @@
-redis==4.4.4
-requests>=2.25
-jpype1>=1.7.1
-jellyfish==1.2.1
-click==7.0
-python-dotenv>=0.17.1
-wheel>=0.45.1
+redis>=4.4.4,<9
+requests>=2.25,<3
+jpype1>=1.7.1,<2
+jellyfish>=1.2.1,<2
+click>=7.0,<9
+python-dotenv>=0.17.1,<1
+wheel>=0.45.1,<1
