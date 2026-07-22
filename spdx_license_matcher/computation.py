@@ -1,7 +1,18 @@
+# SPDX-FileCopyrightText: 2019-present SPDX Contributors
+# SPDX-FileType: SOURCE
+# SPDX-License-Identifier: Apache-2.0
+
 from spdx_license_matcher.normalize import normalize
 from spdx_license_matcher.sorensen_dice import get_dice_coefficient
-from spdx_license_matcher.utils import (checkTextStandardLicense, decompressBytesToString,
-                   getListedLicense)
+from spdx_license_matcher.utils import (
+    checkTextStandardException,
+    checkTextStandardLicense,
+    decompressBytesToString,
+    getListedException,
+    getListedLicense,
+    isListedException,
+)
+
 
 def get_close_matches(inputText, licenseData, threshold=0.9):
     """Normalizes the given license text and forms bigrams before comparing it
@@ -55,8 +66,12 @@ def get_matching_string(matches, inputText):
     
     else:
         for licenseID in matches:
-            listedLicense = getListedLicense(licenseID)
-            isTextStandard = checkTextStandardLicense(listedLicense, inputText)
+            if isListedException(licenseID):
+                listedException = getListedException(licenseID)
+                isTextStandard = checkTextStandardException(listedException, inputText)
+            else:
+                listedLicense = getListedLicense(licenseID)
+                isTextStandard = checkTextStandardLicense(listedLicense, inputText)
             if not isTextStandard:
                 matchingString = 'The following license ID(s) match: ' + licenseID
                 return matchingString
