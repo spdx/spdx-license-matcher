@@ -46,7 +46,7 @@ def build_spdx_licenses():
 
 
 def _build_list(url, listKey, idField, textField):
-    """ Get data from an SPDX list (licenses or exceptions) and set data in redis.
+    """Helper to download list and set data in Redis.
 
     Arguments:
         url {string} -- URL of the SPDX list json.
