@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2019-present SPDX Contributors
+# SPDX-FileType: SOURCE
+# SPDX-License-Identifier: Apache-2.0
+
 from concurrent.futures import ThreadPoolExecutor
 
 import redis
@@ -22,29 +26,50 @@ def get_url(url):
 
 
 def build_spdx_licenses():
-    """ Get data from SPDX license list and set data in redis.
+    """Get data from SPDX license list and exception list and set data in Redis.
     """
-    url = 'https://spdx.org/licenses/licenses.json'
-
     # Delete all the keys in the current database
     r.flushdb()
 
+    _build_list(
+        'https://spdx.org/licenses/licenses.json',
+        'licenses',
+        'licenseId',
+        'licenseText',
+    )
+    _build_list(
+        'https://spdx.org/licenses/exceptions.json',
+        'exceptions',
+        'licenseExceptionId',
+        'licenseExceptionText',
+    )
+
+
+def _build_list(url, listKey, idField, textField):
+    """ Get data from an SPDX list (licenses or exceptions) and set data in redis.
+
+    Arguments:
+        url {string} -- URL of the SPDX list json.
+        listKey {string} -- key of the list in the top-level json (e.g. 'licenses', 'exceptions').
+        idField {string} -- key of the identifier in each license detail json.
+        textField {string} -- key of the license text in each license detail json.
+    """
     response = requests.get(url)
-    licensesJson = response.json()
-    licenses = licensesJson['licenses']
-    licensesUrl = [license.get('detailsUrl') for license in licenses]
+    listJson = response.json()
+    items = listJson[listKey]
+    itemsUrl = [item.get('detailsUrl') for item in items]
 
     with ThreadPoolExecutor(max_workers=2) as pool:
-        responses = list(pool.map(get_url, licensesUrl))
+        responses = list(pool.map(get_url, itemsUrl))
 
     for response in responses:
         try:
-            licenseJson = response.json()
-            licenseName = licenseJson['licenseId']
-            licenseText = licenseJson['licenseText']
-            normalizeText = normalize(licenseText)
+            itemJson = response.json()
+            itemName = itemJson[idField]
+            itemText = itemJson[textField]
+            normalizeText = normalize(itemText)
             compressedText = compressStringToBytes(normalizeText)
-            r.set(licenseName, compressedText)
+            r.set(itemName, compressedText)
         except Exception as e:
             print(e)
             raise

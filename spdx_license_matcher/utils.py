@@ -1,4 +1,5 @@
 # SPDX-FileCopyrightText: 2019-present SPDX Contributors
+# SPDX-FileType: SOURCE
 # SPDX-License-Identifier: Apache-2.0
 
 import gzip
@@ -124,19 +125,26 @@ def checkTextStandardLicense(license, compareText):
 
 
 def get_spdx_license_text(licenseId):
-    """Get the SPDX license text of the closely matched license.
+    """Get the text of the closely matched SPDX license or license exception.
 
     Arguments:
-        licenseId {string} -- License Id of the closely matched license.
+        licenseId {string} -- License ID or Exception ID of the closely matched text.
 
     Returns:
         string -- returns the spdx license text.
     """
     try:
+        # License: https://spdx.org/licenses/MIT.json
+        # License exception: https://spdx.org/licenses/389-exception.json
         res = requests.get(f"https://spdx.org/licenses/{licenseId}.json")
         res.raise_for_status()
     except requests.exceptions.HTTPError:
         raise
     except requests.exceptions.RequestException:
         raise
-    return res.json()['licenseText']
+    licenseJson = res.json()
+    if 'licenseText' in licenseJson:
+        return licenseJson['licenseText']
+    if 'licenseExceptionText' in licenseJson:
+        return licenseJson['licenseExceptionText']
+    raise KeyError(f"No licenseText or licenseExceptionText found for '{licenseId}'")
