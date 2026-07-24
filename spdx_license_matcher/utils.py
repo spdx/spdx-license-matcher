@@ -106,6 +106,40 @@ def getListedLicense(licenseId):
         return LicenseInfoFactory.getListedLicenseByIdCompatV2(licenseId)
 
 
+def isListedException(licenseId):
+    """Check if the given SPDX ID is a SPDX listed license exception ID
+    (as opposed to a license ID).
+
+    Arguments:
+        licenseId {string} -- SPDX ID to check.
+
+    Returns:
+        bool -- True if the ID is a listed license exception ID.
+    """
+    _ensure_jvm()
+    with _jvm_thread():
+        from org.spdx.library import LicenseInfoFactory
+
+        return bool(LicenseInfoFactory.isSpdxListedExceptionId(licenseId))
+
+
+def getListedException(licenseId):
+    """Get a SPDX listed license exception if the given ID is present in the
+    SPDX exception list otherwise null.
+
+    Arguments:
+        licenseId {string} -- SPDX listed license exception ID
+
+    Returns:
+        string -- SPDX listed license exception or null
+    """
+    _ensure_jvm()
+    with _jvm_thread():
+        from org.spdx.library import LicenseInfoFactory
+
+        return LicenseInfoFactory.getListedExceptionV2ById(licenseId)
+
+
 def checkTextStandardLicense(license, compareText):
     """Compares the license text to the license text of SPDX Standard License.
 
@@ -121,6 +155,24 @@ def checkTextStandardLicense(license, compareText):
         from org.spdx.utility.compare import LicenseCompareHelper
 
         diff = LicenseCompareHelper.isTextStandardLicense(license, compareText)
+        return bool(diff.isDifferenceFound())
+
+
+def checkTextStandardException(licenseException, compareText):
+    """Compares the given text to the text of an SPDX listed license exception.
+
+    Arguments:
+        licenseException {string} -- SPDX standard license exception.
+        compareText {string} -- Text to compare with the standard license exception.
+
+    Returns:
+        bool -- True if a difference is found, False if texts match.
+    """
+    _ensure_jvm()
+    with _jvm_thread():
+        from org.spdx.utility.compare import LicenseCompareHelper
+
+        diff = LicenseCompareHelper.isTextStandardException(licenseException, compareText)
         return bool(diff.isDifferenceFound())
 
 
