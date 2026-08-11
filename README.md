@@ -7,6 +7,8 @@ if the input license text is found to be a close match.
 
 A Redis server is used to store the license texts.
 
+Requires Python 3.9+.
+
 ## Usage
 
 ```shell

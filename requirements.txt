@@ -3,5 +3,5 @@ requests>=2.25,<3
 jpype1>=1.7.1,<2
 jellyfish>=1.2.1,<2
 click>=7.0,<9
-python-dotenv>=0.17.1,<1
+python-dotenv>=1.0.1,<2
 wheel>=0.45.1,<1
