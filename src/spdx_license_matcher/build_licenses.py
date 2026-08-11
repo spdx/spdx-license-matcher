@@ -30,21 +30,22 @@ def get_url(url):
 
 
 def build_spdx_licenses():
-    """Get data from SPDX license list and exception list and set data in Redis."""
+    """Get data from SPDX license list and exception list and set data in Redis.
+    """
     # Delete all the keys in the current database
     r.flushdb()
 
     _build_list(
-        "https://spdx.org/licenses/licenses.json",
-        "licenses",
-        "licenseId",
-        "licenseText",
+        'https://spdx.org/licenses/licenses.json',
+        'licenses',
+        'licenseId',
+        'licenseText',
     )
     _build_list(
-        "https://spdx.org/licenses/exceptions.json",
-        "exceptions",
-        "licenseExceptionId",
-        "licenseExceptionText",
+        'https://spdx.org/licenses/exceptions.json',
+        'exceptions',
+        'licenseExceptionId',
+        'licenseExceptionText',
     )
 
 
@@ -60,7 +61,7 @@ def _build_list(url, listKey, idField, textField):
     response = requests.get(url)
     listJson = response.json()
     items = listJson[listKey]
-    itemsUrl = [item.get("detailsUrl") for item in items]
+    itemsUrl = [item.get('detailsUrl') for item in items]
 
     with ThreadPoolExecutor(max_workers=2) as pool:
         responses = list(pool.map(get_url, itemsUrl))

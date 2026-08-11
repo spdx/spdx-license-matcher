@@ -187,9 +187,7 @@ def checkTextStandardException(licenseException, compareText):
     with _jvm_thread():
         from org.spdx.utility.compare import LicenseCompareHelper
 
-        diff = LicenseCompareHelper.isTextStandardException(
-            licenseException, compareText
-        )
+        diff = LicenseCompareHelper.isTextStandardException(licenseException, compareText)
         return bool(diff.isDifferenceFound())
 
 
@@ -212,8 +210,8 @@ def get_spdx_license_text(licenseId):
     except requests.exceptions.RequestException:
         raise
     licenseJson = res.json()
-    if "licenseText" in licenseJson:
-        return licenseJson["licenseText"]
-    if "licenseExceptionText" in licenseJson:
-        return licenseJson["licenseExceptionText"]
+    if 'licenseText' in licenseJson:
+        return licenseJson['licenseText']
+    if 'licenseExceptionText' in licenseJson:
+        return licenseJson['licenseExceptionText']
     raise KeyError(f"No licenseText or licenseExceptionText found for '{licenseId}'")

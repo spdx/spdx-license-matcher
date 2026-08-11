@@ -124,7 +124,7 @@ The workflow of the tool is as follows:
   <https://github.com/spdx/GSoC>.
 
 [spdx-license-list]: https://spdx.org/licenses/
-[sorensen-dice]: https://en.wikipedia.org/wiki/S%C3%B8rensen%E2%80%93Dice_coefficient
-[method]: https://github.com/spdx/tools-java/blob/master/src/main/java/org/spdx/utility/compare/LicenseCompareHelper.java
+[sorensen-dice]: https://en.wikipedia.org/wiki/Dice-S%C3%B8rensen_coefficient
+[method]: https://github.com/spdx/tools/blob/1f4f85ad3fdb63577f9e4db4ccce0c7f894e2f04/src/org/spdx/compare/LicenseCompareHelper.java#L592
 [gsoc2019]: https://summerofcode.withgoogle.com/archive/2019/projects/5687492043341824
 [@ugtan]: https://github.com/ugtan
