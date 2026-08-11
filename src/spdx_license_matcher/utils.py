@@ -187,7 +187,9 @@ def checkTextStandardException(licenseException, compareText):
     with _jvm_thread():
         from org.spdx.utility.compare import LicenseCompareHelper
 
-        diff = LicenseCompareHelper.isTextStandardException(licenseException, compareText)
+        diff = LicenseCompareHelper.isTextStandardException(
+            licenseException, compareText
+        )
         return bool(diff.isDifferenceFound())
 
 
