@@ -1,4 +1,5 @@
 # SPDX-FileCopyrightText: 2026-present SPDX Contributors
+# SPDX-FileType: SOURCE
 # SPDX-License-Identifier: Apache-2.0
 
 """Tests for JPype JVM connection, thread management, and SPDX Java library access."""

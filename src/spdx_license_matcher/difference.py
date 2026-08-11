@@ -1,4 +1,5 @@
 # SPDX-FileCopyrightText: 2019-present SPDX Contributors
+# SPDX-FileType: SOURCE
 # SPDX-License-Identifier: Apache-2.0
 
 """Functions for generating text differences and calculating similarity percentage."""

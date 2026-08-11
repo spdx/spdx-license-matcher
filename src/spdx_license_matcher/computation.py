@@ -1,4 +1,5 @@
 # SPDX-FileCopyrightText: 2019-present SPDX Contributors
+# SPDX-FileType: SOURCE
 # SPDX-License-Identifier: Apache-2.0
 
 """Algorithms for finding close matches and validating them against the SPDX License List."""

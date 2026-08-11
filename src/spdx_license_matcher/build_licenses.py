@@ -1,4 +1,5 @@
 # SPDX-FileCopyrightText: 2019-present SPDX Contributors
+# SPDX-FileType: SOURCE
 # SPDX-License-Identifier: Apache-2.0
 
 """Logic to fetch SPDX licenses and license exceptions, and populate the Redis database."""
