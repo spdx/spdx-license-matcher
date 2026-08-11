@@ -60,7 +60,7 @@ and install.
 
 Verify Redis is running: `redis-cli ping` should return `PONG`.
 
-By default the tool connects to Redis at `localhost:6379`.
+By default, the tool connects to Redis at `localhost:6379`.
 Set `SPDX_REDIS_HOST` to override the hostname.
 
 [ms-redis]: https://github.com/microsoftarchive/redis/releases

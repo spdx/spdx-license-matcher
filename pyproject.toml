@@ -43,6 +43,7 @@ dependencies = [
 ]
 
 [project.scripts]
+license-matcher = "spdx_license_matcher.matcher:matcher"
 spdx-license-matcher = "spdx_license_matcher.matcher:matcher"
 
 [project.urls]
