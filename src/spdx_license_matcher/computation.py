@@ -6,9 +6,12 @@
 from spdx_license_matcher.normalize import normalize
 from spdx_license_matcher.sorensen_dice import get_dice_coefficient
 from spdx_license_matcher.utils import (
+    checkTextStandardException,
     checkTextStandardLicense,
     decompressBytesToString,
+    getListedException,
     getListedLicense,
+    isListedException,
 )
 
 
@@ -70,8 +73,12 @@ def get_matching_string(matches, inputText):
 
     else:
         for licenseID in matches:
-            listedLicense = getListedLicense(licenseID)
-            isTextStandard = checkTextStandardLicense(listedLicense, inputText)
+            if isListedException(licenseID):
+                listedException = getListedException(licenseID)
+                isTextStandard = checkTextStandardException(listedException, inputText)
+            else:
+                listedLicense = getListedLicense(licenseID)
+                isTextStandard = checkTextStandardLicense(listedLicense, inputText)
             if not isTextStandard:
                 matchingString = "The following license ID(s) match: " + licenseID
                 return matchingString

@@ -3,16 +3,17 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "spdx-license-matcher-cli"
+name = "license-matcher"
 dynamic = ["version"]
 description = "Find the closest SPDX license matches for a given license text."
 readme = "README.md"
 license = "Apache-2.0"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 authors = [
     { name = "Umang Taneja" },
     { name = "Gary O'Neall" },
     { name = "Rohit Lodha" },
+    { name = "Arthit Suriyawongkul" },
     { name = "SPDX contributors" },
 ]
 keywords = ["license", "license-matcher", "spdx", "compliance", "open-source"]
@@ -23,22 +24,22 @@ classifiers = [
     "Intended Audience :: Legal Industry",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Software Development",
     "Topic :: Utilities",
 ]
 dependencies = [
-    "click>=8.3.1",
-    "jellyfish>=1.2.1",
-    "jpype1>=1.6.0",
-    "python-dotenv>=1.2.1",
-    "redis>=7.1.0",
-    "requests>=2.32.5",
+    "click>=8.1.0,<9",
+    "jellyfish>=1.2.1,<2",
+    "jpype1>=1.7.1,<2",
+    "python-dotenv>=1.2.1,<2",
+    "redis>=4.4.4,<9",
+    "requests>=2.32.5,<3",
 ]
 
 [project.scripts]

@@ -1,6 +1,6 @@
 # SPDX License Matcher
 
-A Python tool which takes the license text from the user,
+`license-matcher` is a Python tool which takes the license text from the user,
 compares it with the [SPDX License List][spdx-license-list]
 using an algorithm which finds close matches and returns differences
 if the input license text is found to be a close match.
@@ -9,20 +9,20 @@ A Redis (or Valkey) server is used to store the license texts.
 
 ## Requirements
 
-- Python 3.8+
+- Python 3.9+
 - Java 11+ (required by the bundled SPDX Java Tools 2.0.5)
 - Redis or Valkey server
 
 ## Installation
 
 ```sh
-pipx install spdx-license-matcher-cli
+pipx install license-matcher
 ```
 
 Or with uv:
 
 ```sh
-uv tool install spdx-license-matcher-cli
+uv tool install license-matcher
 ```
 
 The package bundles [SPDX Java Tools][tools-java].

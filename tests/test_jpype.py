@@ -3,7 +3,6 @@
 
 """Tests for JPype JVM connection, thread management, and SPDX Java library access."""
 
-import os
 import threading
 
 import jpype
@@ -12,16 +11,15 @@ import jpype
 import jpype.imports  # type: ignore[import]  # noqa: F401
 import pytest
 
-TOOL_JAR = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tool.jar"
-)
+from spdx_license_matcher.utils import _get_jar_path
+
+TOOL_JAR = _get_jar_path()
 
 
 @pytest.fixture(scope="module", autouse=True)
 def jvm():
     """Start JVM once for this module; JVM cannot be restarted between tests."""
     if not jpype.isJVMStarted():
-        assert os.path.exists(TOOL_JAR), f"tool.jar not found at {TOOL_JAR}"
         jpype.startJVM(classpath=[TOOL_JAR], convertStrings=False)
         from org.spdx.library import SpdxModelFactory
 
