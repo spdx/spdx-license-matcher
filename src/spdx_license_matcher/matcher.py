@@ -49,7 +49,7 @@ def matcher(text_file, threshold, build):
     licenseData = dict(list(zip(keys, values)))
     matches = get_close_matches(inputText, licenseData, threshold)
     matchingString = get_matching_string(matches, inputText)
-    if matchingString == "":
+    if matchingString == '':
         licenseID = max(matches, key=matches.get)
         spdxLicenseText = get_spdx_license_text(licenseID)
         similarityPercent = get_similarity_percent(spdxLicenseText, inputText)

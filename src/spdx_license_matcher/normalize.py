@@ -59,7 +59,7 @@ VARIETAL_WORDS_SPELLING = {
     'wilful': 'wilfull',
     'non-commercial': 'noncommercial',
     'per cent': 'percent',
-    'owner': 'holder',
+    'owner': 'holder'
 }
 
 
@@ -74,7 +74,7 @@ def normalize(licenseText):
     """
 
     # To avoid a possibility of a non-match due to urls not being same.
-    licenseText = re.sub(URL_REGEX, "normalized/url", licenseText)
+    licenseText = re.sub(URL_REGEX, 'normalized/url', licenseText)
 
     # To avoid the license mismatch merely due to the existence or absence of code comment indicators placed within the license text, they are just removed.
     licenseText = re.sub(COMMENTS_REGEX, "", licenseText)
@@ -93,8 +93,8 @@ def normalize(licenseText):
     licenseText = licenseText.lower()
 
     # To remove the license name or title present at the beginning of the license text.
-    if "license" in licenseText.split("\n")[0]:
-        licenseText = "\n".join(licenseText.split("\n")[1:])
+    if 'license' in licenseText.split('\n')[0]:
+        licenseText = '\n'.join(licenseText.split('\n')[1:])
 
     # To avoid the possibility of a non-match due to variations of bullets, numbers, letter, or no bullets used are simply removed.
     licenseText = re.sub(BULLETS_NUMBERING_REGEX, " ", licenseText)

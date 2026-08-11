@@ -35,8 +35,8 @@ def get_dice_coefficient(a_license, b_license):
         return 0.0
 
     # Create bigrams
-    a_bigram_list = [a_license[i : i + 2] for i in range(len(a_license) - 1)]
-    b_bigram_list = [b_license[i : i + 2] for i in range(len(b_license) - 1)]
+    a_bigram_list = [a_license[i:i+2] for i in range(len(a_license)-1)]
+    b_bigram_list = [b_license[i:i+2] for i in range(len(b_license)-1)]
 
     a_bigram_list.sort()
     b_bigram_list.sort()
@@ -57,5 +57,5 @@ def get_dice_coefficient(a_license, b_license):
         else:
             j += 1
 
-    score = float(2 * matches) / float(lena + lenb)
+    score = float(2*matches)/float(lena + lenb)
     return score

@@ -57,7 +57,7 @@ def decompressBytesToString(inputBytes):
     """
     buf = BytesIO()
     stream = BytesIO(inputBytes)
-    decompressor = gzip.GzipFile(fileobj=stream, mode="r")
+    decompressor = gzip.GzipFile(fileobj=stream, mode='r')
     while True:  # until EOF
         chunk = decompressor.read(8192)
         if not chunk:
@@ -82,7 +82,7 @@ def compressStringToBytes(inputString):
     buf.write(inputString.encode("utf-8"))
     buf.seek(0)
     stream = BytesIO()
-    compressor = gzip.GzipFile(fileobj=stream, mode="w")
+    compressor = gzip.GzipFile(fileobj=stream, mode='w')
     while True:  # until EOF
         chunk = buf.read(8192)
         if not chunk:  # EOF?
