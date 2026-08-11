@@ -4,16 +4,16 @@
 
 """Command line interface for the SPDX License Matcher tool."""
 
+import os
+
 import click
 import redis
+from dotenv import load_dotenv
 
 from spdx_license_matcher.build_licenses import build_spdx_licenses, is_keys_empty
 from spdx_license_matcher.computation import get_close_matches, get_matching_string
 from spdx_license_matcher.difference import generate_diff, get_similarity_percent
 from spdx_license_matcher.utils import colors, get_spdx_license_text
-
-from dotenv import load_dotenv
-import os
 
 load_dotenv()
 
@@ -24,53 +24,26 @@ def _print_version_callback(ctx, param, value):
     try:
         from spdx_license_matcher import __version__ as ver
     except Exception:
-        ver = "unknown"
+        ver = 'unknown'
     click.echo(ver)
     ctx.exit()
 
 
 @click.command()
-@click.option(
-    "--text_file",
-    "-f",
-    required=True,
-    help="The name of the file in which there is the text you want to match against the SPDX License database.",
-)
-@click.option(
-    "--threshold",
-    "-t",
-    default=0.9,
-    type=click.FloatRange(0.0, 1.0),
-    help='Confidence threshold below which we just won"t consider it a match.',
-    show_default=True,
-)
-@click.option(
-    "--build/--no-build",
-    default=False,
-    help="Builds the SPDX license list in the database. If licenses are already present it will update the redis database.",
-)
-@click.option(
-    "--version",
-    "-V",
-    is_flag=True,
-    is_eager=True,
-    callback=_print_version_callback,
-    expose_value=False,
-    help="Show version and exit.",
-)
+@click.option('--text_file', '-f', required=True, help='The name of the file in which there is the text you want to match against the SPDX License database.')
+@click.option('--threshold', '-t', default=0.9, type = click.FloatRange(0.0, 1.0), help='Confidence threshold below which we just won"t consider it a match.', show_default=True)
+@click.option('--build/--no-build', default=False, help='Builds the SPDX license list in the database. If licenses are already present it will update the redis database.')
+@click.option('--version', '-V', is_flag=True, is_eager=True, callback=_print_version_callback, expose_value=False, help='Show version and exit.')
 def matcher(text_file, threshold, build):
     """SPDX License matcher to match license text against the SPDX license list using an algorithm which finds close matches."""
-    # Read input file as UTF-8
     with open(text_file, "r", encoding="utf-8") as fh:
         inputText = fh.read()
 
     if build or is_keys_empty():
-        click.echo("Building SPDX License List. This may take a while...")
+        click.echo('Building SPDX License List. This may take a while...')
         build_spdx_licenses()
 
-    r = redis.StrictRedis(
-        host=os.environ.get(key="SPDX_REDIS_HOST", default="localhost"), port=6379, db=0
-    )
+    r = redis.StrictRedis(host=os.environ.get(key="SPDX_REDIS_HOST", default="localhost"), port=6379, db=0)
     keys = r.keys()
     values = r.mget(keys)
     licenseData = dict(list(zip(keys, values)))
@@ -80,21 +53,14 @@ def matcher(text_file, threshold, build):
         licenseID = max(matches, key=matches.get)
         spdxLicenseText = get_spdx_license_text(licenseID)
         similarityPercent = get_similarity_percent(spdxLicenseText, inputText)
-        click.echo(
-            colors(
-                "\nThe given license text matches {}% with that of {} based on Levenstein distance.".format(
-                    similarityPercent, licenseID
-                ),
-                94,
-            )
-        )
+        click.echo(colors('\nThe given license text matches {}% with that of {} based on Levenstein distance.'.format(similarityPercent, licenseID), 94))
         differences = generate_diff(spdxLicenseText, inputText)
         for line in differences:
-            if line[0] == "+":
+            if line[0] == '+':
                 line = colors(line, 92)
-            if line[0] == "-":
+            if line[0] == '-':
                 line = colors(line, 91)
-            if line[0] == "@":
+            if line[0] == '@':
                 line = colors(line, 90)
             click.echo(line)
     else:
