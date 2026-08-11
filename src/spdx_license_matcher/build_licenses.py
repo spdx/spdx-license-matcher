@@ -23,8 +23,8 @@ r = redis.StrictRedis(
 
 def get_url(url):
     """GET URL and return response"""
-    user_agent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"
-    headers = {"User-Agent": user_agent}
+    user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36'
+    headers = {'User-Agent': user_agent }
     res = requests.get(url, headers=headers)
     return res
 
@@ -85,4 +85,4 @@ def is_keys_empty():
     Returns:
         bool -- returns if the spdx licenses is present in the redis database or not.
     """
-    return True if r.keys("*") == [] else False
+    return r.keys("*") == []

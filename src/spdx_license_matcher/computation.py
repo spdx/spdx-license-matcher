@@ -31,7 +31,7 @@ def get_close_matches(inputText, licenseData, threshold=0.9):
     normalizedInputText = normalize(inputText)
     for key in licenseData:
         try:
-            licenseName = key.decode("utf-8")
+            licenseName = key.decode('utf-8')
             normalizedLicenseText = decompressBytesToString(licenseData.get(key))
         except Exception:
             licenseName = key
@@ -63,7 +63,7 @@ def get_matching_string(matches, inputText):
         string -- matching string containing the license IDs that actually matched else returns empty string.
     """
     if not matches:
-        matchingString = "There is not enough confidence threshold for the text to match against the SPDX License database."
+        matchingString = 'There is not enough confidence threshold for the text to match against the SPDX License database.'
         return matchingString
 
     elif all(score == 1.0 for score in matches.values()):
