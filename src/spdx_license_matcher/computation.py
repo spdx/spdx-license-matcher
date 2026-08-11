@@ -81,7 +81,6 @@ def get_matching_string(matches, inputText):
                 listedLicense = getListedLicense(licenseID)
                 isTextStandard = checkTextStandardLicense(listedLicense, inputText)
             if not isTextStandard:
-                matchingString = "The following license ID(s) match: " + licenseID
+                matchingString = 'The following license ID(s) match: ' + licenseID
                 return matchingString
-        else:
-            return ""
+        return ""
