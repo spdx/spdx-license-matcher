@@ -2,6 +2,8 @@
 # SPDX-FileType: SOURCE
 # SPDX-License-Identifier: Apache-2.0
 
+"""Utility functions for Java library interaction and text compression."""
+
 import gzip
 import os
 from contextlib import contextmanager
@@ -16,8 +18,7 @@ import requests
 
 def _ensure_jvm():
     if not jpype.isJVMStarted():
-        dirpath = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        classpath = os.path.join(dirpath, "tool.jar")
+        classpath = _get_jar_path()
         jpype.startJVM(classpath=[classpath], convertStrings=False)
         from org.spdx.library import SpdxModelFactory
 
@@ -88,6 +89,20 @@ def compressStringToBytes(inputString):
             compressor.close()
             return stream.getvalue()
         compressor.write(chunk)
+
+
+def _get_jar_path():
+    """Resolve path to tool.jar. SPDX_TOOLS_JAR env var overrides the bundled jar."""
+    override = os.environ.get("SPDX_TOOLS_JAR")
+    if override:
+        return override
+    bundled = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tool.jar")
+    if not os.path.exists(bundled):
+        raise FileNotFoundError(
+            f"Bundled tool.jar not found at {bundled}. "
+            "Please ensure the package was installed correctly or set SPDX_TOOLS_JAR."
+        )
+    return bundled
 
 
 def getListedLicense(licenseId):

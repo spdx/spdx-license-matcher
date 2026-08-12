@@ -1,7 +1,9 @@
 # SPDX-FileCopyrightText: 2026-present SPDX Contributors
+# SPDX-FileType: SOURCE
 # SPDX-License-Identifier: Apache-2.0
 
 """Tests for JPype JVM connection, thread management, and SPDX Java library access."""
+
 import os
 import threading
 
@@ -11,9 +13,9 @@ import jpype
 import jpype.imports  # type: ignore[import]  # noqa: F401
 import pytest
 
-TOOL_JAR = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tool.jar"
-)
+from spdx_license_matcher.utils import _get_jar_path
+
+TOOL_JAR = _get_jar_path()
 
 
 @pytest.fixture(scope="module", autouse=True)
