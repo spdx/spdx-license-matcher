@@ -6,14 +6,10 @@
 
 import re
 
-URL_REGEX = (
-    r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+"
-)
+URL_REGEX = r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
 COPYRIGHT_NOTICE_REGEX = r"((?<=\n)|.*)Copyright.+(?=\n)|Copyright.+\\n"
 COPYRIGHT_SYMBOLS = r"[©Ⓒⓒ]"
-BULLETS_NUMBERING_REGEX = (
-    r"\s(([0-9a-z]\.\s)+|(\([0-9a-z]\)\s)+|(\*\s)+)|(\s\([i]+\)\s)"
-)
+BULLETS_NUMBERING_REGEX = r"\s(([0-9a-z]\.\s)+|(\([0-9a-z]\)\s)+|(\*\s)+)|(\s\([i]+\)\s)"
 COMMENTS_REGEX = r"(\/\/|\/\*|#) +.*"
 EXTRANEOUS_REGEX = r"(?is)\s*end of terms and conditions.*"
 ADDENDIUM_EXHIBIT_REGEX = r"(?s)(APPENDIX|APADDENDUM|EXHIBIT).*"
