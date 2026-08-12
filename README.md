@@ -22,6 +22,8 @@ spdx-license-matcher -f filename -t threshold
 
 Run `spdx-license-matcher --help` for more info.
 
+(For the very first time it may take a while to build the license.)
+
 ## Installation
 
 ```shell
@@ -44,7 +46,7 @@ set the `SPDX_TOOLS_JAR` environment variable to its path before running.
 
 ### Install Redis/Valkey
 
-Redis or Valkey stores the pre-processed SPDX License List.
+Redis/Valkey stores the pre-processed SPDX License List.
 Install it once, then keep it running while using the tool.
 
 - Linux
@@ -64,14 +66,14 @@ Install it once, then keep it running while using the tool.
 
   Download from [microsoftarchive/redis][ms-redis] and install.
 
+[ms-redis]: https://github.com/microsoftarchive/redis/releases
+
 #### Verify installation
 
 Verify Redis is running: `redis-cli ping` should return `PONG`.
 
 By default, the tool connects to Redis at `localhost:6379`.
 Set `SPDX_REDIS_HOST` to override the hostname.
-
-[ms-redis]: https://github.com/microsoftarchive/redis/releases
 
 ### Development Installation
 
