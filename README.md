@@ -47,22 +47,22 @@ set the `SPDX_TOOLS_JAR` environment variable to its path before running.
 Redis or Valkey stores the pre-processed SPDX License List.
 Install it once, then keep it running while using the tool.
 
-#### Linux
+- Linux
 
-```shell
-sudo apt-get install redis-server
-```
+  ```shell
+  sudo apt-get install redis-server
+  ```
 
-#### macOS
+- macOS
 
-```shell
-brew install redis
-brew services start redis
-```
+  ```shell
+  brew install redis
+  brew services start redis
+  ```
 
-#### Windows
+- Windows
 
-Download from [microsoftarchive/redis][ms-redis] and install.
+  Download from [microsoftarchive/redis][ms-redis] and install.
 
 #### Verify installation
 
