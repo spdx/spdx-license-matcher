@@ -11,15 +11,13 @@ Requires Python 3.9+ and Java 11+ (for SPDX Java Tools).
 
 ## Usage
 
-To run the tool, use the command:
-
-```sh
-spdx-license-matcher -f <file-name> -t <threshold>
+```shell
+spdx-license-matcher -f filename -t threshold
 ```
 
-- `filename` is the file with the license text.
+- `filename` is the file with the license text
   (required)
-- `threshold` is a value up to which we will just won't consider a match.
+- `threshold` is a value up to which we will just won't consider a match
   (optional; default: 0.9)
 
 Run `spdx-license-matcher --help` for more info.
