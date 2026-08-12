@@ -5,9 +5,9 @@ compares it with the [SPDX License List][spdx-license-list]
 using an algorithm which finds close matches and returns differences
 if the input license text is found to be a close match.
 
-A Redis server is used to store the license texts.
+A Redis (or Valkey) server is used to store the license texts.
 
-Requires Python 3.9+.
+Requires Python 3.9+ and Java 11+ (for SPDX Java Tools).
 
 ## Usage
 
@@ -24,79 +24,69 @@ Run `spdx-license-matcher --help` for more info.
 
 ## Installation
 
-Ensure that you are using Python 3 for installation of the tool.
+```shell
+pipx install license-matcher
+```
+
+Or with uv:
+
+```shell
+uv tool install license-matcher
+```
+
+The package bundles [SPDX Java Tools][tools-java].
+No separate jar download needed.
+
+To use a different jar version,
+set the `SPDX_TOOLS_JAR` environment variable to its path before running.
+
+[tools-java]: https://github.com/spdx/tools-java
+
+### Install Redis/Valkey
+
+Redis or Valkey stores the pre-processed SPDX License List.
+Install it once, then keep it running while using the tool.
+
+- Linux
+
+  ```shell
+  sudo apt-get install redis-server
+  ```
+
+- macOS
+
+  ```shell
+  brew install redis
+  brew services start redis
+  ```
+
+- Windows
+
+  Download from [microsoftarchive/redis][ms-redis] and install.
+
+#### Verify installation
+
+Verify Redis is running: `redis-cli ping` should return `PONG`.
+
+By default, the tool connects to Redis at `localhost:6379`.
+Set `SPDX_REDIS_HOST` to override the hostname.
+
+[ms-redis]: https://github.com/microsoftarchive/redis/releases
+
+### Development Installation
 
 1. Clone the repository
 
     ```shell
     git clone https://github.com/spdx/spdx-license-matcher.git
-    ```
-
-2. Make a Python3 virtual environment
-
-    ```shell
     cd spdx-license-matcher
-    python3 -m venv virtual-env-name
     ```
 
-3. Activate the virtual environment
+2. Install in editable mode
 
     ```shell
-    source virtual-env-name/bin/activate
+    pip install -e .
     ```
-
-4. Install spdx-license-matcher with required dependencies inside
-    the virtual environment
-
-    ```shell
-    pip install .
-    ```
-
-5. Install Redis (or Valkey) server on your local machine
-
-    - Linux
-
-      ```shell
-      sudo apt-get install redis-server
-      ```
-
-    - macOS
-
-      ```shell
-      brew install redis
-      ```
-
-      To run the Redis server:
-
-      ```shell
-      redis-server /opt/homebrew/etc/redis.conf
-      ```
-
-      To run the Redis whenever your computer starts:
-
-      ```shell
-      brew services start redis
-      ```
-
-    - Windows
-
-      Download the Redis server from
-      <https://github.com/microsoftarchive/redis/releases> and install it.
-
-    Make sure the Redis/Valkey server is running
-    and keep it running until you are done using the tool.
-
-    - To test if the Redis is working:
-
-      ```shell
-      redis-cli ping
-      ```
-
-      If it returns `PONG` then you are good to go.
-
-    - For the very first time it may take a while to build the license.
-    - `SPDX_REDIS_HOST` environment variable can be set to the location of
-      your Redis/Valkey server (default is `localhost`). The port is `6379`.
 
 ## Workflow
 
@@ -131,7 +121,7 @@ The workflow of the tool is as follows:
 ## History
 
 - This project started as [a Google Summer of Code 2019 project][gsoc2019],
-  with contribution from [@ugtan][].
+  with contribution from [@ugtan].
 - Now maintained by the SPDX community and updated for Python 3.
 - See SPDX's participation in Google Summer of Code (GSoC):
   <https://github.com/spdx/GSoC>.
