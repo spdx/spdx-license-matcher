@@ -4,6 +4,7 @@
 
 """Tests for JPype JVM connection, thread management, and SPDX Java library access."""
 
+import os
 import threading
 
 import jpype
@@ -21,6 +22,7 @@ TOOL_JAR = _get_jar_path()
 def jvm():
     """Start JVM once for this module; JVM cannot be restarted between tests."""
     if not jpype.isJVMStarted():
+        assert os.path.exists(TOOL_JAR), f"tool.jar not found at {TOOL_JAR}"
         jpype.startJVM(classpath=[TOOL_JAR], convertStrings=False)
         from org.spdx.library import SpdxModelFactory
 
