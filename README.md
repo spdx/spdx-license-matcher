@@ -94,19 +94,29 @@ The workflow of the tool is as follows:
 
 1. Reads the license text as input from the user.
 2. Build a Redis/Valkey database with all the license text present on the
-   SPDX License List.
+    SPDX License List.
 3. Compare the license text with the license text present in the database.
-   - Normalizes the license text based on the SPDX Matching guidelines while
-     ignoring replaceable text and focusing on substantial text.
-   - Tokenizes the normalized text into a list of bigrams.
-   - Use a token-based similarity metric algorithm, namely the
-     [Sørensen-Dice algorithm][sorensen-dice], to find close matches.
-   - A threshold value is used to filter out low-confidence matches.
-   - If the match is 100%, it's a perfect match.
-   - If the match is between the threshold and 100%, we apply the full matching
-     algorithm from the [SPDX Java Tools][method].
-     - If there is a match, the text is considered to match the standard license.
-     - If not, the tool displays the differences.
+
+    - Normalizes the license text based on the SPDX Matching guidelines while
+      ignore the replaceable text
+      and only focusing on substantial text for matching purposes.
+    - Tokenizes the normalized text into a list of bigrams. This is necessary
+      for the token-based algorithm we are using for our use case.
+    - Use a token based similarity metric algorithm namely
+      [Sørensen-Dice algorithm][sorensen-dice] which is based on the logic
+      to find the common tokens, and divide it by the total number of tokens
+      present by combining both of the sets.
+      This algorithm helps us to distinguish our close matches.
+    - A threshold value is used where we just won't consider a match.
+    - If the match is 100% then we say it's a perfect match.
+    - If the match is between a threshold value and 100% then we apply the
+      full matching algorithms and compares the closely matched license text
+      to the license text of SPDX Standard License using a [method][method]
+      present in the SPDX tools.
+      - If there is a match then the given license text matches with the SPDX
+        standard license.
+      - If there is no match then we simply display the differences of the given
+        license text with that of SPDX License List.
 
 ## History
 
