@@ -6,8 +6,16 @@ name: Build wheels
 on:
   push:
     branches: [ master ]
+    paths:
+      - "src/**"
+      - "pyproject.toml"
+      - ".github/workflows/build.yml"
   pull_request:
     branches: [ master ]
+    paths:
+      - "src/**"
+      - "pyproject.toml"
+      - ".github/workflows/build.yml"
 
 jobs:
   build-wheel:
