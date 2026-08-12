@@ -1,17 +1,28 @@
 # SPDX License Matcher
 
-`license-matcher` is a Python tool which takes the license text from the user,
+A Python tool which takes the license text from the user,
 compares it with the [SPDX License List][spdx-license-list]
 using an algorithm which finds close matches and returns differences
 if the input license text is found to be a close match.
 
 A Redis (or Valkey) server is used to store the license texts.
 
-## Requirements
+Requires Python 3.9+ and Java 11+ (for SPDX Java Tools).
 
-- Python 3.9+
-- Java 11+ (required by the bundled SPDX Java Tools 2.0.5)
-- Redis or Valkey server
+## Usage
+
+To run the tool, use the command:
+
+```sh
+spdx-license-matcher -f <file-name> -t <threshold>
+```
+
+- `filename` is the file with the license text.
+  (required)
+- `threshold` is a value up to which we will just won't consider a match.
+  (optional; default: 0.9)
+
+Run `spdx-license-matcher --help` for more info.
 
 ## Installation
 
@@ -53,8 +64,7 @@ brew services start redis
 
 #### Windows
 
-Download from [microsoftarchive/redis][ms-redis]
-and install.
+Download from [microsoftarchive/redis][ms-redis] and install.
 
 #### Verify installation
 
@@ -64,21 +74,6 @@ By default, the tool connects to Redis at `localhost:6379`.
 Set `SPDX_REDIS_HOST` to override the hostname.
 
 [ms-redis]: https://github.com/microsoftarchive/redis/releases
-
-## Usage
-
-To run the tool, use the command:
-
-```sh
-spdx-license-matcher -f <file-name> -t <threshold>
-```
-
-- `filename` is the file with the license text.
-  (required)
-- `threshold` is a value up to which we will just won't consider a match.
-  (optional; default: 0.9)
-
-Run `spdx-license-matcher --help` for more info.
 
 ### Development Installation
 
