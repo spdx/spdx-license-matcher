@@ -24,13 +24,13 @@ Run `spdx-license-matcher --help` for more info.
 
 ## Installation
 
-```sh
+```shell
 pipx install license-matcher
 ```
 
 Or with uv:
 
-```sh
+```shell
 uv tool install license-matcher
 ```
 
@@ -49,13 +49,13 @@ Install it once, then keep it running while using the tool.
 
 #### Linux
 
-```sh
+```shell
 sudo apt-get install redis-server
 ```
 
 #### macOS
 
-```sh
+```shell
 brew install redis
 brew services start redis
 ```
@@ -77,14 +77,14 @@ Set `SPDX_REDIS_HOST` to override the hostname.
 
 1. Clone the repository
 
-    ```sh
+    ```shell
     git clone https://github.com/spdx/spdx-license-matcher.git
     cd spdx-license-matcher
     ```
 
 2. Install in editable mode
 
-    ```sh
+    ```shell
     pip install -e .
     ```
 
