@@ -22,6 +22,8 @@ spdx-license-matcher -f filename -t threshold
 
 Run `spdx-license-matcher --help` for more info.
 
+(For the very first time it may take a while to build the license.)
+
 ## Installation
 
 Ensure that you are using Python 3 for installation of the tool.
@@ -52,51 +54,36 @@ Ensure that you are using Python 3 for installation of the tool.
     pip install .
     ```
 
-5. Install Redis (or Valkey) server on your local machine
+### Install Redis/Valkey
 
-    - Linux
+Redis/Valkey stores the pre-processed SPDX License List.
+Install it once, then keep it running while using the tool.
 
-      ```shell
-      sudo apt-get install redis-server
-      ```
+- Linux
 
-    - macOS
+  ```shell
+  sudo apt-get install redis-server
+  ```
 
-      ```shell
-      brew install redis
-      ```
+- macOS
 
-      To run the Redis server:
+  ```shell
+  brew install redis
+  brew services start redis
+  ```
 
-      ```shell
-      redis-server /opt/homebrew/etc/redis.conf
-      ```
+- Windows
 
-      To run the Redis whenever your computer starts:
+  Download from [microsoftarchive/redis][ms-redis] and install.
 
-      ```shell
-      brew services start redis
-      ```
+[ms-redis]: https://github.com/microsoftarchive/redis/releases
 
-    - Windows
+#### Verify installation
 
-      Download the Redis server from
-      <https://github.com/microsoftarchive/redis/releases> and install it.
+Verify Redis is running: `redis-cli ping` should return `PONG`.
 
-    Make sure the Redis/Valkey server is running
-    and keep it running until you are done using the tool.
-
-    - To test if the Redis is working:
-
-      ```shell
-      redis-cli ping
-      ```
-
-      If it returns `PONG` then you are good to go.
-
-    - For the very first time it may take a while to build the license.
-    - `SPDX_REDIS_HOST` environment variable can be set to the location of
-      your Redis/Valkey server (default is `localhost`). The port is `6379`.
+By default, the tool connects to Redis at `localhost:6379`.
+Set `SPDX_REDIS_HOST` to override the hostname.
 
 ## Workflow
 
