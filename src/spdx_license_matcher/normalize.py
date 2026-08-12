@@ -1,4 +1,9 @@
-# -*- coding: utf-8 -*-
+# SPDX-FileCopyrightText: 2019-present SPDX Contributors
+# SPDX-FileType: SOURCE
+# SPDX-License-Identifier: Apache-2.0
+
+"""Text normalization based on SPDX Matching Guidelines."""
+
 import re
 
 URL_REGEX = r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
@@ -91,7 +96,7 @@ def normalize(licenseText):
     licenseText = re.sub(BULLETS_NUMBERING_REGEX, " ", licenseText)
 
     # To avoid the possibility of a non-match due to the same word being spelled differently.
-    for initial, final in list(VARIETAL_WORDS_SPELLING.items()):
+    for initial, final in VARIETAL_WORDS_SPELLING.items():
         licenseText = licenseText.replace(initial, final)
 
     # To avoid the possibility of a non-match due to different spacing of words, line breaks, or paragraphs.

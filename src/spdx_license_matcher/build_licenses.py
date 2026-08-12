@@ -2,12 +2,14 @@
 # SPDX-FileType: SOURCE
 # SPDX-License-Identifier: Apache-2.0
 
+"""Logic to fetch SPDX licenses and license exceptions, and populate the Redis database."""
+
+import os
 from concurrent.futures import ThreadPoolExecutor
 
 import redis
 import requests
 from dotenv import load_dotenv
-import os
 
 from spdx_license_matcher.normalize import normalize
 from spdx_license_matcher.utils import compressStringToBytes
@@ -81,4 +83,4 @@ def is_keys_empty():
     Returns:
         bool -- returns if the spdx licenses is present in the redis database or not.
     """
-    return True if r.keys('*') == [] else False
+    return r.keys("*") == []

@@ -1,0 +1,74 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "license-matcher"
+dynamic = ["version"]
+description = "Find the closest SPDX license matches for a given license text."
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.9"
+authors = [
+    { name = "Umang Taneja" },
+    { name = "Gary O'Neall" },
+    { name = "Rohit Lodha" },
+    { name = "Arthit Suriyawongkul" },
+    { name = "SPDX contributors" },
+]
+keywords = [
+    "license",
+    "license-matcher",
+    "spdx",
+    "compliance",
+    "open-source",
+    "copyright",
+    "legal",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Legal Industry",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "click>=8.1.0,<9",
+    "jellyfish>=1.2.1,<2",
+    "jpype1>=1.7.1,<2",
+    "python-dotenv>=1.2.1,<2",
+    "redis>=4.4.4,<9",
+    "requests>=2.32.5,<3",
+]
+
+[project.scripts]
+license-matcher = "spdx_license_matcher.matcher:matcher"
+spdx-license-matcher = "spdx_license_matcher.matcher:matcher"
+
+[project.urls]
+documentation = "https://github.com/spdx/spdx-license-matcher/blob/master/README.md"
+download = "https://github.com/spdx/spdx-license-matcher/releases"
+homepage = "https://github.com/spdx/spdx-license-matcher"
+issues = "https://github.com/spdx/spdx-license-matcher/issues"
+releasenotes = "https://github.com/spdx/spdx-license-matcher/releases"
+source = "https://github.com/spdx/spdx-license-matcher.git"
+
+[tool.hatch.version]
+path = "src/spdx_license_matcher/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+exclude = ["/tests"]
+force-include = { "src/spdx_license_matcher/tool.jar" = "spdx_license_matcher/tool.jar" }
+packages = ["src/spdx_license_matcher"]
+
+[tool.hatch.build.targets.sdist]
+exclude = ["/tests", "src/spdx_license_matcher/tool.jar"]
