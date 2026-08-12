@@ -16,7 +16,15 @@ authors = [
     { name = "Arthit Suriyawongkul" },
     { name = "SPDX contributors" },
 ]
-keywords = ["license", "license-matcher", "spdx", "compliance", "open-source"]
+keywords = [
+    "license",
+    "license-matcher",
+    "spdx",
+    "compliance",
+    "open-source",
+    "copyright",
+    "legal",
+]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
@@ -47,9 +55,12 @@ license-matcher = "spdx_license_matcher.matcher:matcher"
 spdx-license-matcher = "spdx_license_matcher.matcher:matcher"
 
 [project.urls]
-Homepage = "https://github.com/spdx/spdx-license-matcher"
-Issues = "https://github.com/spdx/spdx-license-matcher/issues"
-Source = "https://github.com/spdx/spdx-license-matcher"
+documentation = "https://github.com/spdx/spdx-license-matcher/blob/master/README.md"
+download = "https://github.com/spdx/spdx-license-matcher/releases"
+homepage = "https://github.com/spdx/spdx-license-matcher"
+issues = "https://github.com/spdx/spdx-license-matcher/issues"
+releasenotes = "https://github.com/spdx/spdx-license-matcher/releases"
+source = "https://github.com/spdx/spdx-license-matcher.git"
 
 [tool.hatch.version]
 path = "src/spdx_license_matcher/__init__.py"
@@ -60,7 +71,4 @@ force-include = { "src/spdx_license_matcher/tool.jar" = "spdx_license_matcher/to
 packages = ["src/spdx_license_matcher"]
 
 [tool.hatch.build.targets.sdist]
-exclude = [
-  "/tests",
-  "src/spdx_license_matcher/tool.jar",
-]
+exclude = ["/tests", "src/spdx_license_matcher/tool.jar"]
