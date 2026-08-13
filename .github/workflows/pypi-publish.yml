@@ -25,11 +25,24 @@ jobs:
       - name: Install build dependencies
         run: |
           pip install --upgrade build pip
-          pip install -e .
 
       - name: Build sdist and wheel
         run: |
           python -m build
+
+      - name: Verify distribution contents
+        run: |
+          pip install --upgrade twine
+          twine check dist/*
+          python -c "
+          import sys, zipfile, glob
+          whl = glob.glob('dist/*.whl')[0]
+          with zipfile.ZipFile(whl) as zf:
+              names = zf.namelist()
+          if 'spdx_license_matcher/tool.jar' not in names:
+              sys.exit(f'tool.jar missing from wheel: {whl}')
+          print(f'tool.jar present in {whl}')
+          "
 
       - name: Upload distribution artifacts
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -54,4 +67,4 @@ jobs:
           path: dist/
 
       - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # release/v1
