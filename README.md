@@ -26,11 +26,23 @@ Run `spdx-license-matcher --help` for more info.
 
 ## Installation
 
+To install the package via pip, run:
+
+```shell
+pip install license-matcher
+```
+
+**Note:** The package name is `license-matcher` (without the "spdx" prefix).
+However, in Python code, it is imported as `spdx_license_matcher`.
+
+To install it globally as a standalone command-line tool,
+you can use pipx or uv:
+
 ```shell
 pipx install license-matcher
 ```
 
-Or with uv:
+or
 
 ```shell
 uv tool install license-matcher
