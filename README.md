@@ -1,5 +1,8 @@
 # SPDX License Matcher
 
+[![PyPI - Version](https://img.shields.io/pypi/v/license-matcher)](https://pypi.org/project/license-matcher/)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/14073/badge)](https://www.bestpractices.dev/projects/14073)
+
 A Python tool which takes the license text from the user,
 compares it with the [SPDX License List][spdx-license-list]
 using an algorithm which finds close matches and returns differences
