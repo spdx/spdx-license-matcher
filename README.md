@@ -5,9 +5,9 @@ compares it with the [SPDX License List][spdx-license-list]
 using an algorithm which finds close matches and returns differences
 if the input license text is found to be a close match.
 
-A Redis server is used to store the license texts.
+A Redis (or Valkey) server is used to store the license texts.
 
-Requires Python 3.9+.
+Requires Python 3.9+ and Java 11+ (for SPDX Java Tools).
 
 ## Usage
 
@@ -26,33 +26,23 @@ Run `spdx-license-matcher --help` for more info.
 
 ## Installation
 
-Ensure that you are using Python 3 for installation of the tool.
+```shell
+pipx install license-matcher
+```
 
-1. Clone the repository
+Or with uv:
 
-    ```shell
-    git clone https://github.com/spdx/spdx-license-matcher.git
-    ```
+```shell
+uv tool install license-matcher
+```
 
-2. Make a Python3 virtual environment
+The package bundles [SPDX Java Tools][tools-java].
+No separate jar download needed.
 
-    ```shell
-    cd spdx-license-matcher
-    python3 -m venv virtual-env-name
-    ```
+To use a different jar version,
+set the `SPDX_TOOLS_JAR` environment variable to its path before running.
 
-3. Activate the virtual environment
-
-    ```shell
-    source virtual-env-name/bin/activate
-    ```
-
-4. Install spdx-license-matcher with required dependencies inside
-    the virtual environment
-
-    ```shell
-    pip install .
-    ```
+[tools-java]: https://github.com/spdx/tools-java
 
 ### Install Redis/Valkey
 
@@ -84,6 +74,21 @@ Verify Redis is running: `redis-cli ping` should return `PONG`.
 
 By default, the tool connects to Redis at `localhost:6379`.
 Set `SPDX_REDIS_HOST` to override the hostname.
+
+### Development Installation
+
+1. Clone the repository
+
+    ```shell
+    git clone https://github.com/spdx/spdx-license-matcher.git
+    cd spdx-license-matcher
+    ```
+
+2. Install in editable mode
+
+    ```shell
+    pip install -e .
+    ```
 
 ## Workflow
 
@@ -118,7 +123,7 @@ The workflow of the tool is as follows:
 ## History
 
 - This project started as [a Google Summer of Code 2019 project][gsoc2019],
-  with contribution from [@ugtan][].
+  with contribution from [@ugtan].
 - Now maintained by the SPDX community and updated for Python 3.
 - See SPDX's participation in Google Summer of Code (GSoC):
   <https://github.com/spdx/GSoC>.
