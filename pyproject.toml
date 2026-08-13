@@ -71,4 +71,4 @@ force-include = { "src/spdx_license_matcher/tool.jar" = "spdx_license_matcher/to
 packages = ["src/spdx_license_matcher"]
 
 [tool.hatch.build.targets.sdist]
-exclude = ["/tests", "src/spdx_license_matcher/tool.jar"]
+exclude = ["/tests"]
